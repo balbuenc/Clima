@@ -1,10 +1,10 @@
-﻿@model IEnumerable<ClimaAdmin.Models.Afirmaciones>
+﻿@model IEnumerable<ClimaAdmin.Models.Preguntas>
 
 @{
-    ViewBag.Title = "Afirmaciones";
+    ViewBag.Title = "Preguntas";
 }
 
-<h2>Afirmaciones</h2>
+<h2>Preguntas abiertas</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -30,9 +30,9 @@
             @Html.DisplayFor(modelItem => item.Dimensiones.Nombre)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.IdAfirmacion }) |
-            @Html.ActionLink("Details", "Details", new { id=item.IdAfirmacion }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.IdAfirmacion })
+            @Html.ActionLink("Edit", "Edit", new { id=item.IdPregunta }) |
+            @Html.ActionLink("Details", "Details", new { id=item.IdPregunta }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.IdPregunta })
         </td>
     </tr>
 }

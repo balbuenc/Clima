@@ -10,112 +10,107 @@ using ClimaAdmin.Models;
 
 namespace ClimaAdmin.Controllers
 {
-    public class AfirmacionesController : Controller
+    public class EmpresasController : Controller
     {
         private ClimaEntities db = new ClimaEntities();
 
-        // GET: Afirmaciones
+        // GET: Empresas
         public ActionResult Index()
         {
-            var afirmaciones = db.Afirmaciones.Include(a => a.Dimensiones);
-            return View(afirmaciones.ToList());
+            return View(db.Empresas.ToList());
         }
 
-        // GET: Afirmaciones/Details/5
+        // GET: Empresas/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Afirmaciones afirmaciones = db.Afirmaciones.Find(id);
-            if (afirmaciones == null)
+            Empresas empresas = db.Empresas.Find(id);
+            if (empresas == null)
             {
                 return HttpNotFound();
             }
-            return View(afirmaciones);
+            return View(empresas);
         }
 
-        // GET: Afirmaciones/Create
+        // GET: Empresas/Create
         public ActionResult Create()
         {
-            ViewBag.IdDimension = new SelectList(db.Dimensiones, "IdDimension", "Nombre");
             return View();
         }
 
-        // POST: Afirmaciones/Create
+        // POST: Empresas/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "IdAfirmacion,Enunciado,IdDimension")] Afirmaciones afirmaciones)
+        public ActionResult Create([Bind(Include = "cod_empresa,Empresa")] Empresas empresas)
         {
             if (ModelState.IsValid)
             {
-                db.Afirmaciones.Add(afirmaciones);
+                db.Empresas.Add(empresas);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.IdDimension = new SelectList(db.Dimensiones, "IdDimension", "Nombre", afirmaciones.IdDimension);
-            return View(afirmaciones);
+            return View(empresas);
         }
 
-        // GET: Afirmaciones/Edit/5
+        // GET: Empresas/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Afirmaciones afirmaciones = db.Afirmaciones.Find(id);
-            if (afirmaciones == null)
+            Empresas empresas = db.Empresas.Find(id);
+            if (empresas == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.IdDimension = new SelectList(db.Dimensiones, "IdDimension", "Nombre", afirmaciones.IdDimension);
-            return View(afirmaciones);
+            return View(empresas);
         }
 
-        // POST: Afirmaciones/Edit/5
+        // POST: Empresas/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IdAfirmacion,Enunciado,IdDimension")] Afirmaciones afirmaciones)
+        public ActionResult Edit([Bind(Include = "cod_empresa,Empresa")] Empresas empresas)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(afirmaciones).State = EntityState.Modified;
+                db.Entry(empresas).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.IdDimension = new SelectList(db.Dimensiones, "IdDimension", "Nombre", afirmaciones.IdDimension);
-            return View(afirmaciones);
+            return View(empresas);
         }
 
-        // GET: Afirmaciones/Delete/5
+        // GET: Empresas/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Afirmaciones afirmaciones = db.Afirmaciones.Find(id);
-            if (afirmaciones == null)
+            Empresas empresas = db.Empresas.Find(id);
+            if (empresas == null)
             {
                 return HttpNotFound();
             }
-            return View(afirmaciones);
+            return View(empresas);
         }
 
-        // POST: Afirmaciones/Delete/5
+        // POST: Empresas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Afirmaciones afirmaciones = db.Afirmaciones.Find(id);
-            db.Afirmaciones.Remove(afirmaciones);
+            Empresas empresas = db.Empresas.Find(id);
+            db.Empresas.Remove(empresas);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

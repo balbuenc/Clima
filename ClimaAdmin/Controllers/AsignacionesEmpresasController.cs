@@ -12,12 +12,12 @@ namespace ClimaAdmin.Controllers
 {
     public class AsignacionesEmpresasController : Controller
     {
-        private ClimaEF db = new ClimaEF();
+        private ClimaEntities db = new ClimaEntities();
 
         // GET: AsignacionesEmpresas
         public ActionResult Index()
         {
-            var asignacionesEmpresas = db.AsignacionesEmpresas.Include(a => a.Encuestas);
+            var asignacionesEmpresas = db.AsignacionesEmpresas.Include(a => a.Empresas).Include(a => a.Encuestas);
             return View(asignacionesEmpresas.ToList());
         }
 
@@ -39,6 +39,7 @@ namespace ClimaAdmin.Controllers
         // GET: AsignacionesEmpresas/Create
         public ActionResult Create()
         {
+            ViewBag.cod_empresa = new SelectList(db.Empresas, "cod_empresa", "Empresa");
             ViewBag.IdEncuesta = new SelectList(db.Encuestas, "IdEncuesta", "Nombre");
             return View();
         }
@@ -48,7 +49,7 @@ namespace ClimaAdmin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "IdEncuesta,cod_empresa")] AsignacionesEmpresas asignacionesEmpresas)
+        public ActionResult Create([Bind(Include = "IdEncuesta,cod_empresa,Observaciones")] AsignacionesEmpresas asignacionesEmpresas)
         {
             if (ModelState.IsValid)
             {
@@ -57,6 +58,7 @@ namespace ClimaAdmin.Controllers
                 return RedirectToAction("Index");
             }
 
+            ViewBag.cod_empresa = new SelectList(db.Empresas, "cod_empresa", "Empresa", asignacionesEmpresas.cod_empresa);
             ViewBag.IdEncuesta = new SelectList(db.Encuestas, "IdEncuesta", "Nombre", asignacionesEmpresas.IdEncuesta);
             return View(asignacionesEmpresas);
         }
@@ -73,6 +75,7 @@ namespace ClimaAdmin.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.cod_empresa = new SelectList(db.Empresas, "cod_empresa", "Empresa", asignacionesEmpresas.cod_empresa);
             ViewBag.IdEncuesta = new SelectList(db.Encuestas, "IdEncuesta", "Nombre", asignacionesEmpresas.IdEncuesta);
             return View(asignacionesEmpresas);
         }
@@ -82,7 +85,7 @@ namespace ClimaAdmin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IdEncuesta,cod_empresa")] AsignacionesEmpresas asignacionesEmpresas)
+        public ActionResult Edit([Bind(Include = "IdEncuesta,cod_empresa,Observaciones")] AsignacionesEmpresas asignacionesEmpresas)
         {
             if (ModelState.IsValid)
             {
@@ -90,6 +93,7 @@ namespace ClimaAdmin.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.cod_empresa = new SelectList(db.Empresas, "cod_empresa", "Empresa", asignacionesEmpresas.cod_empresa);
             ViewBag.IdEncuesta = new SelectList(db.Encuestas, "IdEncuesta", "Nombre", asignacionesEmpresas.IdEncuesta);
             return View(asignacionesEmpresas);
         }

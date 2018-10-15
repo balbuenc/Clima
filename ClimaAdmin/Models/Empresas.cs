@@ -12,25 +12,18 @@ namespace ClimaAdmin.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Encuestas
+    public partial class Empresas
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Encuestas()
+        public Empresas()
         {
             this.AsignacionesEmpresas = new HashSet<AsignacionesEmpresas>();
-            this.EncuestaPreguntas = new HashSet<EncuestaPreguntas>();
         }
     
-        public short IdPeriodo { get; set; }
-        public string Nombre { get; set; }
-        public string Descripcion { get; set; }
-        public short Activo { get; set; }
-        public int IdEncuesta { get; set; }
+        public int cod_empresa { get; set; }
+        public string Empresa { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AsignacionesEmpresas> AsignacionesEmpresas { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<EncuestaPreguntas> EncuestaPreguntas { get; set; }
-        public virtual Periodos Periodos { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace ClimaAdmin.Controllers
 {
     public class EncuestasController : Controller
     {
-        private ClimaEF db = new ClimaEF();
+        private ClimaEntities db = new ClimaEntities();
 
         // GET: Encuestas
         public ActionResult Index()
@@ -48,7 +48,7 @@ namespace ClimaAdmin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "IdEncuesta,IdPeriodo,Nombre,Descripcion,Activo")] Encuestas encuestas)
+        public ActionResult Create([Bind(Include = "IdPeriodo,Nombre,Descripcion,Activo,IdEncuesta")] Encuestas encuestas)
         {
             if (ModelState.IsValid)
             {
@@ -82,7 +82,7 @@ namespace ClimaAdmin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IdEncuesta,IdPeriodo,Nombre,Descripcion,Activo")] Encuestas encuestas)
+        public ActionResult Edit([Bind(Include = "IdPeriodo,Nombre,Descripcion,Activo,IdEncuesta")] Encuestas encuestas)
         {
             if (ModelState.IsValid)
             {

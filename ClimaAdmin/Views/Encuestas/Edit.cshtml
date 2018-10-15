@@ -15,8 +15,6 @@
         <h4>Encuestas</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.IdEncuesta)
-
         <div class="form-group">
             @Html.LabelFor(model => model.IdPeriodo, "IdPeriodo", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -48,6 +46,8 @@
                 @Html.ValidationMessageFor(model => model.Activo, "", new { @class = "text-danger" })
             </div>
         </div>
+
+        @Html.HiddenFor(model => model.IdEncuesta)
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

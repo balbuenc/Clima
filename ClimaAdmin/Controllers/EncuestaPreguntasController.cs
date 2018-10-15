@@ -12,17 +12,17 @@ namespace ClimaAdmin.Controllers
 {
     public class EncuestaPreguntasController : Controller
     {
-        private ClimaEF db = new ClimaEF();
+        private ClimaEntities db = new ClimaEntities();
 
         // GET: EncuestaPreguntas
         public ActionResult Index()
         {
-            var encuestaPreguntas = db.EncuestaPreguntas.Include(e => e.Afirmaciones).Include(e => e.Dimensiones).Include(e => e.Encuestas).Include(e => e.TipoPreguntas);
+            var encuestaPreguntas = db.EncuestaPreguntas.Include(e => e.Afirmaciones).Include(e => e.Encuestas).Include(e => e.Preguntas).Include(e => e.TipoPreguntas);
             return View(encuestaPreguntas.ToList());
         }
 
         // GET: EncuestaPreguntas/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(long? id)
         {
             if (id == null)
             {
@@ -40,8 +40,8 @@ namespace ClimaAdmin.Controllers
         public ActionResult Create()
         {
             ViewBag.IdAfirmacion = new SelectList(db.Afirmaciones, "IdAfirmacion", "Enunciado");
-            ViewBag.IdDimension = new SelectList(db.Dimensiones, "IdDimension", "Nombre");
             ViewBag.IdEncuesta = new SelectList(db.Encuestas, "IdEncuesta", "Nombre");
+            ViewBag.IdPregunta = new SelectList(db.Preguntas, "IdPregunta", "Enunciado");
             ViewBag.IdTipoPregunta = new SelectList(db.TipoPreguntas, "IdTipoPregunta", "Tipo");
             return View();
         }
@@ -51,7 +51,7 @@ namespace ClimaAdmin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "IdEncuesta,IdAfirmacion,IdDimension,IdTipoPregunta")] EncuestaPreguntas encuestaPreguntas)
+        public ActionResult Create([Bind(Include = "IdEncuesta,IdTipoPregunta,IdAfirmacion,IdPregunta,Id")] EncuestaPreguntas encuestaPreguntas)
         {
             if (ModelState.IsValid)
             {
@@ -61,14 +61,14 @@ namespace ClimaAdmin.Controllers
             }
 
             ViewBag.IdAfirmacion = new SelectList(db.Afirmaciones, "IdAfirmacion", "Enunciado", encuestaPreguntas.IdAfirmacion);
-            ViewBag.IdDimension = new SelectList(db.Dimensiones, "IdDimension", "Nombre", encuestaPreguntas.IdDimension);
             ViewBag.IdEncuesta = new SelectList(db.Encuestas, "IdEncuesta", "Nombre", encuestaPreguntas.IdEncuesta);
+            ViewBag.IdPregunta = new SelectList(db.Preguntas, "IdPregunta", "Enunciado", encuestaPreguntas.IdPregunta);
             ViewBag.IdTipoPregunta = new SelectList(db.TipoPreguntas, "IdTipoPregunta", "Tipo", encuestaPreguntas.IdTipoPregunta);
             return View(encuestaPreguntas);
         }
 
         // GET: EncuestaPreguntas/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(long? id)
         {
             if (id == null)
             {
@@ -80,8 +80,8 @@ namespace ClimaAdmin.Controllers
                 return HttpNotFound();
             }
             ViewBag.IdAfirmacion = new SelectList(db.Afirmaciones, "IdAfirmacion", "Enunciado", encuestaPreguntas.IdAfirmacion);
-            ViewBag.IdDimension = new SelectList(db.Dimensiones, "IdDimension", "Nombre", encuestaPreguntas.IdDimension);
             ViewBag.IdEncuesta = new SelectList(db.Encuestas, "IdEncuesta", "Nombre", encuestaPreguntas.IdEncuesta);
+            ViewBag.IdPregunta = new SelectList(db.Preguntas, "IdPregunta", "Enunciado", encuestaPreguntas.IdPregunta);
             ViewBag.IdTipoPregunta = new SelectList(db.TipoPreguntas, "IdTipoPregunta", "Tipo", encuestaPreguntas.IdTipoPregunta);
             return View(encuestaPreguntas);
         }
@@ -91,7 +91,7 @@ namespace ClimaAdmin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IdEncuesta,IdAfirmacion,IdDimension,IdTipoPregunta")] EncuestaPreguntas encuestaPreguntas)
+        public ActionResult Edit([Bind(Include = "IdEncuesta,IdTipoPregunta,IdAfirmacion,IdPregunta,Id")] EncuestaPreguntas encuestaPreguntas)
         {
             if (ModelState.IsValid)
             {
@@ -100,14 +100,14 @@ namespace ClimaAdmin.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.IdAfirmacion = new SelectList(db.Afirmaciones, "IdAfirmacion", "Enunciado", encuestaPreguntas.IdAfirmacion);
-            ViewBag.IdDimension = new SelectList(db.Dimensiones, "IdDimension", "Nombre", encuestaPreguntas.IdDimension);
             ViewBag.IdEncuesta = new SelectList(db.Encuestas, "IdEncuesta", "Nombre", encuestaPreguntas.IdEncuesta);
+            ViewBag.IdPregunta = new SelectList(db.Preguntas, "IdPregunta", "Enunciado", encuestaPreguntas.IdPregunta);
             ViewBag.IdTipoPregunta = new SelectList(db.TipoPreguntas, "IdTipoPregunta", "Tipo", encuestaPreguntas.IdTipoPregunta);
             return View(encuestaPreguntas);
         }
 
         // GET: EncuestaPreguntas/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(long? id)
         {
             if (id == null)
             {
@@ -124,7 +124,7 @@ namespace ClimaAdmin.Controllers
         // POST: EncuestaPreguntas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(long id)
         {
             EncuestaPreguntas encuestaPreguntas = db.EncuestaPreguntas.Find(id);
             db.EncuestaPreguntas.Remove(encuestaPreguntas);

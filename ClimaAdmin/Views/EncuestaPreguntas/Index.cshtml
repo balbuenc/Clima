@@ -7,18 +7,19 @@
 <h2>Preguntas</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Crear nueva pregunta o afirmación", "Create")
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Afirmaciones.Enunciado)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Dimensiones.Nombre)
+            @*@Html.DisplayNameFor(model => model.Afirmaciones.Enunciado)*@
+            Pregunta
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Encuestas.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Preguntas.Enunciado)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.TipoPreguntas.Tipo)
@@ -32,18 +33,18 @@
             @Html.DisplayFor(modelItem => item.Afirmaciones.Enunciado)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Dimensiones.Nombre)
+            @Html.DisplayFor(modelItem => item.Encuestas.Nombre)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Encuestas.Nombre)
+            @Html.DisplayFor(modelItem => item.Preguntas.Enunciado)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.TipoPreguntas.Tipo)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
         </td>
     </tr>
 }

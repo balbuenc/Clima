@@ -12,7 +12,7 @@ namespace ClimaAdmin.Controllers
 {
     public class TipoPreguntasController : Controller
     {
-        private ClimaEF db = new ClimaEF();
+        private ClimaEntities db = new ClimaEntities();
 
         // GET: TipoPreguntas
         public ActionResult Index()

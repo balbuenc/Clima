@@ -9,7 +9,7 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{1A86EE26-7BD7-49EA-BC0C-9EBF025EAB3D}</ProjectGuid>
+    <ProjectGuid>{2A24563E-AEEA-4287-8C13-083AAD91B34D}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -19,8 +19,8 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
-    <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
@@ -152,24 +152,62 @@
     <Compile Include="Controllers\AfirmacionesController.cs" />
     <Compile Include="Controllers\AsignacionesEmpresasController.cs" />
     <Compile Include="Controllers\DimensionesController.cs" />
+    <Compile Include="Controllers\EmpresasController.cs" />
     <Compile Include="Controllers\EncuestaPreguntasController.cs" />
     <Compile Include="Controllers\EncuestasController.cs" />
     <Compile Include="Controllers\EvaluacionAfirmacionesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PeriodosController.cs" />
+    <Compile Include="Controllers\PreguntasController.cs" />
     <Compile Include="Controllers\TipoPreguntasController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Afirmaciones.cs" />
-    <Compile Include="Models\AsignacionesEmpresas.cs" />
-    <Compile Include="Models\ClimaEF.cs" />
-    <Compile Include="Models\Dimensiones.cs" />
-    <Compile Include="Models\EncuestaPreguntas.cs" />
-    <Compile Include="Models\Encuestas.cs" />
-    <Compile Include="Models\EvaluacionAfirmaciones.cs" />
-    <Compile Include="Models\Periodos.cs" />
-    <Compile Include="Models\TipoPreguntas.cs" />
+    <Compile Include="Models\Afirmaciones.cs">
+      <DependentUpon>ClimaEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AsignacionesEmpresas.cs">
+      <DependentUpon>ClimaEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ClimaEF.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClimaEF.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ClimaEF.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClimaEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ClimaEF.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClimaEF.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Dimensiones.cs">
+      <DependentUpon>ClimaEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Empresas.cs">
+      <DependentUpon>ClimaEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EncuestaPreguntas.cs">
+      <DependentUpon>ClimaEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Encuestas.cs">
+      <DependentUpon>ClimaEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EvaluacionAfirmaciones.cs">
+      <DependentUpon>ClimaEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Periodos.cs">
+      <DependentUpon>ClimaEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Preguntas.cs">
+      <DependentUpon>ClimaEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TipoPreguntas.cs">
+      <DependentUpon>ClimaEF.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -179,10 +217,27 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Models\ClimaEF.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ClimaEF.edmx</DependentUpon>
+      <LastGenOutput>ClimaEF.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\ClimaEF.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ClimaEF.edmx</DependentUpon>
+      <LastGenOutput>ClimaEF.cs</LastGenOutput>
+    </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EntityDeploy Include="Models\ClimaEF.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ClimaEF.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\ClimaEF.edmx.diagram">
+      <DependentUpon>ClimaEF.edmx</DependentUpon>
     </Content>
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -210,46 +265,56 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Periodos\Create.cshtml" />
-    <Content Include="Views\Periodos\Delete.cshtml" />
-    <Content Include="Views\Periodos\Details.cshtml" />
-    <Content Include="Views\Periodos\Edit.cshtml" />
-    <Content Include="Views\Periodos\Index.cshtml" />
-    <Content Include="Views\Encuestas\Create.cshtml" />
-    <Content Include="Views\Encuestas\Delete.cshtml" />
-    <Content Include="Views\Encuestas\Details.cshtml" />
-    <Content Include="Views\Encuestas\Edit.cshtml" />
-    <Content Include="Views\Encuestas\Index.cshtml" />
-    <Content Include="Views\Dimensiones\Create.cshtml" />
-    <Content Include="Views\Dimensiones\Delete.cshtml" />
-    <Content Include="Views\Dimensiones\Details.cshtml" />
-    <Content Include="Views\Dimensiones\Edit.cshtml" />
-    <Content Include="Views\Dimensiones\Index.cshtml" />
-    <Content Include="Views\EncuestaPreguntas\Create.cshtml" />
-    <Content Include="Views\EncuestaPreguntas\Delete.cshtml" />
-    <Content Include="Views\EncuestaPreguntas\Details.cshtml" />
-    <Content Include="Views\EncuestaPreguntas\Edit.cshtml" />
-    <Content Include="Views\EncuestaPreguntas\Index.cshtml" />
-    <Content Include="Views\Afirmaciones\Create.cshtml" />
-    <Content Include="Views\Afirmaciones\Delete.cshtml" />
-    <Content Include="Views\Afirmaciones\Details.cshtml" />
-    <Content Include="Views\Afirmaciones\Edit.cshtml" />
-    <Content Include="Views\Afirmaciones\Index.cshtml" />
     <Content Include="Views\AsignacionesEmpresas\Create.cshtml" />
     <Content Include="Views\AsignacionesEmpresas\Delete.cshtml" />
     <Content Include="Views\AsignacionesEmpresas\Details.cshtml" />
     <Content Include="Views\AsignacionesEmpresas\Edit.cshtml" />
     <Content Include="Views\AsignacionesEmpresas\Index.cshtml" />
+    <Content Include="Views\Dimensiones\Create.cshtml" />
+    <Content Include="Views\Dimensiones\Delete.cshtml" />
+    <Content Include="Views\Dimensiones\Details.cshtml" />
+    <Content Include="Views\Dimensiones\Edit.cshtml" />
+    <Content Include="Views\Dimensiones\Index.cshtml" />
+    <Content Include="Views\Empresas\Create.cshtml" />
+    <Content Include="Views\Empresas\Delete.cshtml" />
+    <Content Include="Views\Empresas\Details.cshtml" />
+    <Content Include="Views\Empresas\Edit.cshtml" />
+    <Content Include="Views\Empresas\Index.cshtml" />
+    <Content Include="Views\Encuestas\Create.cshtml" />
+    <Content Include="Views\Encuestas\Delete.cshtml" />
+    <Content Include="Views\Encuestas\Details.cshtml" />
+    <Content Include="Views\Encuestas\Edit.cshtml" />
+    <Content Include="Views\Encuestas\Index.cshtml" />
     <Content Include="Views\EvaluacionAfirmaciones\Create.cshtml" />
     <Content Include="Views\EvaluacionAfirmaciones\Delete.cshtml" />
     <Content Include="Views\EvaluacionAfirmaciones\Details.cshtml" />
     <Content Include="Views\EvaluacionAfirmaciones\Edit.cshtml" />
     <Content Include="Views\EvaluacionAfirmaciones\Index.cshtml" />
+    <Content Include="Views\Periodos\Create.cshtml" />
+    <Content Include="Views\Periodos\Delete.cshtml" />
+    <Content Include="Views\Periodos\Details.cshtml" />
+    <Content Include="Views\Periodos\Edit.cshtml" />
+    <Content Include="Views\Periodos\Index.cshtml" />
     <Content Include="Views\TipoPreguntas\Create.cshtml" />
     <Content Include="Views\TipoPreguntas\Delete.cshtml" />
     <Content Include="Views\TipoPreguntas\Details.cshtml" />
     <Content Include="Views\TipoPreguntas\Edit.cshtml" />
     <Content Include="Views\TipoPreguntas\Index.cshtml" />
+    <Content Include="Views\Afirmaciones\Create.cshtml" />
+    <Content Include="Views\Afirmaciones\Delete.cshtml" />
+    <Content Include="Views\Afirmaciones\Details.cshtml" />
+    <Content Include="Views\Afirmaciones\Edit.cshtml" />
+    <Content Include="Views\Afirmaciones\Index.cshtml" />
+    <Content Include="Views\EncuestaPreguntas\Create.cshtml" />
+    <Content Include="Views\EncuestaPreguntas\Delete.cshtml" />
+    <Content Include="Views\EncuestaPreguntas\Details.cshtml" />
+    <Content Include="Views\EncuestaPreguntas\Edit.cshtml" />
+    <Content Include="Views\EncuestaPreguntas\Index.cshtml" />
+    <Content Include="Views\Preguntas\Create.cshtml" />
+    <Content Include="Views\Preguntas\Delete.cshtml" />
+    <Content Include="Views\Preguntas\Details.cshtml" />
+    <Content Include="Views\Preguntas\Edit.cshtml" />
+    <Content Include="Views\Preguntas\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -269,6 +334,9 @@
   <ItemGroup>
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -285,7 +353,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>51931</DevelopmentServerPort>
+          <DevelopmentServerPort>52517</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:51651/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

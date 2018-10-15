@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="8920242b85c54e3baa606f5cf471c18a" Name="Diagram1">
+        <EntityTypeShape EntityType="ClimaModel.Afirmaciones" Width="1.5" PointX="3" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ClimaModel.AsignacionesEmpresas" Width="1.5" PointX="5.25" PointY="7.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ClimaModel.Dimensiones" Width="1.5" PointX="0.75" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ClimaModel.Empresas" Width="1.5" PointX="3" PointY="14.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ClimaModel.EncuestaPreguntas" Width="1.5" PointX="5.25" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ClimaModel.Encuestas" Width="1.5" PointX="3" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ClimaModel.EvaluacionAfirmaciones" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ClimaModel.Periodos" Width="1.5" PointX="0.75" PointY="7.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ClimaModel.Preguntas" Width="1.5" PointX="3" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ClimaModel.TipoPreguntas" Width="1.5" PointX="3" PointY="11.75" IsExpanded="true" />
+        <AssociationConnector Association="ClimaModel.FK_Afirmaciones_Dimensiones" ManuallyRouted="false" />
+        <AssociationConnector Association="ClimaModel.FK_EncuestaPreguntas_Afirmaciones1" ManuallyRouted="false" />
+        <AssociationConnector Association="ClimaModel.FK_AsignacionesEmpresas_Empresas" ManuallyRouted="false" />
+        <AssociationConnector Association="ClimaModel.FK_AsignacionesEmpresas_Encuestas" ManuallyRouted="false" />
+        <AssociationConnector Association="ClimaModel.FK_Preguntas_Dimensiones" ManuallyRouted="false" />
+        <AssociationConnector Association="ClimaModel.FK_EncuestaPreguntas_Encuestas" ManuallyRouted="false" />
+        <AssociationConnector Association="ClimaModel.FK_EncuestaPreguntas_Preguntas" ManuallyRouted="false" />
+        <AssociationConnector Association="ClimaModel.FK_EncuestaPreguntas_TipoPreguntas" ManuallyRouted="false" />
+        <AssociationConnector Association="ClimaModel.FK_Encuestas_Periodos" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

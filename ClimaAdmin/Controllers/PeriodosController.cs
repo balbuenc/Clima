@@ -12,7 +12,7 @@ namespace ClimaAdmin.Controllers
 {
     public class PeriodosController : Controller
     {
-        private ClimaEF db = new ClimaEF();
+        private ClimaEntities db = new ClimaEntities();
 
         // GET: Periodos
         public ActionResult Index()

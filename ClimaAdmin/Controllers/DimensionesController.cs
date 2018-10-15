@@ -12,7 +12,7 @@ namespace ClimaAdmin.Controllers
 {
     public class DimensionesController : Controller
     {
-        private ClimaEF db = new ClimaEF();
+        private ClimaEntities db = new ClimaEntities();
 
         // GET: Dimensiones
         public ActionResult Index()

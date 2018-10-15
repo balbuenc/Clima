@@ -1,4 +1,4 @@
-﻿@model ClimaAdmin.Models.Afirmaciones
+﻿@model ClimaAdmin.Models.Preguntas
 
 @{
     ViewBag.Title = "Edit";
@@ -12,10 +12,10 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>Afirmaciones</h4>
+        <h4>Preguntas</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.IdAfirmacion)
+        @Html.HiddenFor(model => model.IdPregunta)
 
         <div class="form-group">
             @Html.LabelFor(model => model.Enunciado, htmlAttributes: new { @class = "control-label col-md-2" })
