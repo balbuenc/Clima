@@ -17,7 +17,7 @@ namespace ClimaAdmin.Controllers
         // GET: EncuestaPreguntas
         public ActionResult Index()
         {
-            var encuestaPreguntas = db.EncuestaPreguntas.Include(e => e.Afirmaciones).Include(e => e.Encuestas).Include(e => e.Preguntas).Include(e => e.TipoPreguntas);
+            var encuestaPreguntas = db.EncuestaPreguntas.Include(e => e.Afirmaciones).Include(e => e.Encuestas).Include(e => e.Preguntas).Include(e => e.SeleccionMultiples).Include(e => e.TipoPreguntas);
             return View(encuestaPreguntas.ToList());
         }
 
@@ -42,6 +42,7 @@ namespace ClimaAdmin.Controllers
             ViewBag.IdAfirmacion = new SelectList(db.Afirmaciones, "IdAfirmacion", "Enunciado");
             ViewBag.IdEncuesta = new SelectList(db.Encuestas, "IdEncuesta", "Nombre");
             ViewBag.IdPregunta = new SelectList(db.Preguntas, "IdPregunta", "Enunciado");
+            ViewBag.IdSeleccionMultiple = new SelectList(db.SeleccionMultiples, "IdSeleccionMultiple", "Enunciado");
             ViewBag.IdTipoPregunta = new SelectList(db.TipoPreguntas, "IdTipoPregunta", "Tipo");
             return View();
         }
@@ -51,7 +52,7 @@ namespace ClimaAdmin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "IdEncuesta,IdTipoPregunta,IdAfirmacion,IdPregunta,Id")] EncuestaPreguntas encuestaPreguntas)
+        public ActionResult Create([Bind(Include = "IdEncuesta,IdTipoPregunta,IdAfirmacion,IdPregunta,Id,IdSeleccionMultiple")] EncuestaPreguntas encuestaPreguntas)
         {
             if (ModelState.IsValid)
             {
@@ -63,6 +64,7 @@ namespace ClimaAdmin.Controllers
             ViewBag.IdAfirmacion = new SelectList(db.Afirmaciones, "IdAfirmacion", "Enunciado", encuestaPreguntas.IdAfirmacion);
             ViewBag.IdEncuesta = new SelectList(db.Encuestas, "IdEncuesta", "Nombre", encuestaPreguntas.IdEncuesta);
             ViewBag.IdPregunta = new SelectList(db.Preguntas, "IdPregunta", "Enunciado", encuestaPreguntas.IdPregunta);
+            ViewBag.IdSeleccionMultiple = new SelectList(db.SeleccionMultiples, "IdSeleccionMultiple", "Enunciado", encuestaPreguntas.IdSeleccionMultiple);
             ViewBag.IdTipoPregunta = new SelectList(db.TipoPreguntas, "IdTipoPregunta", "Tipo", encuestaPreguntas.IdTipoPregunta);
             return View(encuestaPreguntas);
         }
@@ -82,6 +84,7 @@ namespace ClimaAdmin.Controllers
             ViewBag.IdAfirmacion = new SelectList(db.Afirmaciones, "IdAfirmacion", "Enunciado", encuestaPreguntas.IdAfirmacion);
             ViewBag.IdEncuesta = new SelectList(db.Encuestas, "IdEncuesta", "Nombre", encuestaPreguntas.IdEncuesta);
             ViewBag.IdPregunta = new SelectList(db.Preguntas, "IdPregunta", "Enunciado", encuestaPreguntas.IdPregunta);
+            ViewBag.IdSeleccionMultiple = new SelectList(db.SeleccionMultiples, "IdSeleccionMultiple", "Enunciado", encuestaPreguntas.IdSeleccionMultiple);
             ViewBag.IdTipoPregunta = new SelectList(db.TipoPreguntas, "IdTipoPregunta", "Tipo", encuestaPreguntas.IdTipoPregunta);
             return View(encuestaPreguntas);
         }
@@ -91,7 +94,7 @@ namespace ClimaAdmin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IdEncuesta,IdTipoPregunta,IdAfirmacion,IdPregunta,Id")] EncuestaPreguntas encuestaPreguntas)
+        public ActionResult Edit([Bind(Include = "IdEncuesta,IdTipoPregunta,IdAfirmacion,IdPregunta,Id,IdSeleccionMultiple")] EncuestaPreguntas encuestaPreguntas)
         {
             if (ModelState.IsValid)
             {
@@ -102,6 +105,7 @@ namespace ClimaAdmin.Controllers
             ViewBag.IdAfirmacion = new SelectList(db.Afirmaciones, "IdAfirmacion", "Enunciado", encuestaPreguntas.IdAfirmacion);
             ViewBag.IdEncuesta = new SelectList(db.Encuestas, "IdEncuesta", "Nombre", encuestaPreguntas.IdEncuesta);
             ViewBag.IdPregunta = new SelectList(db.Preguntas, "IdPregunta", "Enunciado", encuestaPreguntas.IdPregunta);
+            ViewBag.IdSeleccionMultiple = new SelectList(db.SeleccionMultiples, "IdSeleccionMultiple", "Enunciado", encuestaPreguntas.IdSeleccionMultiple);
             ViewBag.IdTipoPregunta = new SelectList(db.TipoPreguntas, "IdTipoPregunta", "Tipo", encuestaPreguntas.IdTipoPregunta);
             return View(encuestaPreguntas);
         }

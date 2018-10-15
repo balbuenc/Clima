@@ -32,8 +32,10 @@ namespace ClimaAdmin.Models
         public virtual DbSet<EncuestaPreguntas> EncuestaPreguntas { get; set; }
         public virtual DbSet<Encuestas> Encuestas { get; set; }
         public virtual DbSet<EvaluacionAfirmaciones> EvaluacionAfirmaciones { get; set; }
+        public virtual DbSet<OpcionesSeleccionMultiple> OpcionesSeleccionMultiple { get; set; }
         public virtual DbSet<Periodos> Periodos { get; set; }
         public virtual DbSet<Preguntas> Preguntas { get; set; }
+        public virtual DbSet<SeleccionMultiples> SeleccionMultiples { get; set; }
         public virtual DbSet<TipoPreguntas> TipoPreguntas { get; set; }
     }
 }

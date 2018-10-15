@@ -12,19 +12,12 @@ namespace ClimaAdmin.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class EncuestaPreguntas
+    public partial class OpcionesSeleccionMultiple
     {
-        public int IdEncuesta { get; set; }
-        public short IdTipoPregunta { get; set; }
-        public Nullable<int> IdAfirmacion { get; set; }
-        public Nullable<int> IdPregunta { get; set; }
+        public int IdSeleccionMultiple { get; set; }
+        public string Valor { get; set; }
         public long Id { get; set; }
-        public Nullable<int> IdSeleccionMultiple { get; set; }
     
-        public virtual Afirmaciones Afirmaciones { get; set; }
-        public virtual Encuestas Encuestas { get; set; }
-        public virtual Preguntas Preguntas { get; set; }
         public virtual SeleccionMultiples SeleccionMultiples { get; set; }
-        public virtual TipoPreguntas TipoPreguntas { get; set; }
     }
 }

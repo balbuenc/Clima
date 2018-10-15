@@ -12,25 +12,23 @@ namespace ClimaAdmin.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Dimensiones
+    public partial class SeleccionMultiples
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Dimensiones()
+        public SeleccionMultiples()
         {
-            this.Afirmaciones = new HashSet<Afirmaciones>();
-            this.Preguntas = new HashSet<Preguntas>();
-            this.SeleccionMultiples = new HashSet<SeleccionMultiples>();
+            this.EncuestaPreguntas = new HashSet<EncuestaPreguntas>();
+            this.OpcionesSeleccionMultiple = new HashSet<OpcionesSeleccionMultiple>();
         }
     
+        public int IdSeleccionMultiple { get; set; }
+        public string Enunciado { get; set; }
         public int IdDimension { get; set; }
-        public string Nombre { get; set; }
-        public string Descripcion { get; set; }
     
+        public virtual Dimensiones Dimensiones { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Afirmaciones> Afirmaciones { get; set; }
+        public virtual ICollection<EncuestaPreguntas> EncuestaPreguntas { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Preguntas> Preguntas { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SeleccionMultiples> SeleccionMultiples { get; set; }
+        public virtual ICollection<OpcionesSeleccionMultiple> OpcionesSeleccionMultiple { get; set; }
     }
 }

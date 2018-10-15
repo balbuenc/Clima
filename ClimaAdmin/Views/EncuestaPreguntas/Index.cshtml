@@ -4,49 +4,62 @@
     ViewBag.Title = "Preguntas";
 }
 
-<h2>Preguntas</h2>
+<h2>Configuración de cuestionarios</h2>
 
 <p>
-    @Html.ActionLink("Crear nueva pregunta o afirmación", "Create")
+    @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
     <tr>
         <th>
+            @*@Html.DisplayNameFor(model => model.Encuestas.Nombre)*@
+            Encuesta
+        </th>
+        <th>
             @*@Html.DisplayNameFor(model => model.Afirmaciones.Enunciado)*@
+            Afirmación
+        </th>
+       
+        <th>
+            @*@Html.DisplayNameFor(model => model.Preguntas.Enunciado)*@
             Pregunta
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Encuestas.Nombre)
+            @*@Html.DisplayNameFor(model => model.SeleccionMultiples.Enunciado)*@
+            Selección
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Preguntas.Enunciado)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TipoPreguntas.Tipo)
+            @*@Html.DisplayNameFor(model => model.TipoPreguntas.Tipo)*@
+            Tipo
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Afirmaciones.Enunciado)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Encuestas.Nombre)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Preguntas.Enunciado)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TipoPreguntas.Tipo)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Encuestas.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Afirmaciones.Enunciado)
+            </td>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.Preguntas.Enunciado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SeleccionMultiples.Enunciado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TipoPreguntas.Tipo)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
 
 </table>

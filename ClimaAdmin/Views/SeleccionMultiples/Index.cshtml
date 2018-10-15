@@ -1,0 +1,39 @@
+﻿@model IEnumerable<ClimaAdmin.Models.SeleccionMultiples>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Enunciado)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Dimensiones.Nombre)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Enunciado)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Dimensiones.Nombre)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.IdSeleccionMultiple }) |
+            @Html.ActionLink("Details", "Details", new { id=item.IdSeleccionMultiple }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.IdSeleccionMultiple })
+        </td>
+    </tr>
+}
+
+</table>

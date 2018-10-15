@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ClimaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ClimaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Afirmaciones">
           <Key>
             <PropertyRef Name="IdAfirmacion" />
@@ -43,9 +43,10 @@
           </Key>
           <Property Name="IdEncuesta" Type="int" Nullable="false" />
           <Property Name="IdTipoPregunta" Type="smallint" Nullable="false" />
-          <Property Name="IdAfirmacion" Type="int" Nullable="false" />
+          <Property Name="IdAfirmacion" Type="int" />
           <Property Name="IdPregunta" Type="int" />
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdSeleccionMultiple" Type="int" />
         </EntityType>
         <EntityType Name="Encuestas">
           <Key>
@@ -64,6 +65,14 @@
           <Property Name="Evaluacion" Type="smallint" Nullable="false" />
           <Property Name="Descripcion" Type="varchar" MaxLength="128" Nullable="false" />
         </EntityType>
+        <EntityType Name="OpcionesSeleccionMultiple">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="IdSeleccionMultiple" Type="int" Nullable="false" />
+          <Property Name="Valor" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
         <EntityType Name="Periodos">
           <Key>
             <PropertyRef Name="IdPeriodo" />
@@ -77,6 +86,14 @@
           </Key>
           <Property Name="IdPregunta" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Enunciado" Type="varchar" MaxLength="1024" Nullable="false" />
+          <Property Name="IdDimension" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SeleccionMultiples">
+          <Key>
+            <PropertyRef Name="IdSeleccionMultiple" />
+          </Key>
+          <Property Name="IdSeleccionMultiple" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Enunciado" Type="varchar" MaxLength="512" Nullable="false" />
           <Property Name="IdDimension" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="TipoPreguntas">
@@ -123,7 +140,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_EncuestaPreguntas_Afirmaciones1">
-          <End Role="Afirmaciones" Type="Self.Afirmaciones" Multiplicity="1" />
+          <End Role="Afirmaciones" Type="Self.Afirmaciones" Multiplicity="0..1" />
           <End Role="EncuestaPreguntas" Type="Self.EncuestaPreguntas" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Afirmaciones">
@@ -158,6 +175,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_EncuestaPreguntas_SeleccionMultiples">
+          <End Role="SeleccionMultiples" Type="Self.SeleccionMultiples" Multiplicity="0..1" />
+          <End Role="EncuestaPreguntas" Type="Self.EncuestaPreguntas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SeleccionMultiples">
+              <PropertyRef Name="IdSeleccionMultiple" />
+            </Principal>
+            <Dependent Role="EncuestaPreguntas">
+              <PropertyRef Name="IdSeleccionMultiple" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_EncuestaPreguntas_TipoPreguntas">
           <End Role="TipoPreguntas" Type="Self.TipoPreguntas" Multiplicity="1" />
           <End Role="EncuestaPreguntas" Type="Self.EncuestaPreguntas" Multiplicity="*" />
@@ -182,6 +211,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_OpcionesSeleccionMultiple_SeleccionMultiples">
+          <End Role="SeleccionMultiples" Type="Self.SeleccionMultiples" Multiplicity="1" />
+          <End Role="OpcionesSeleccionMultiple" Type="Self.OpcionesSeleccionMultiple" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SeleccionMultiples">
+              <PropertyRef Name="IdSeleccionMultiple" />
+            </Principal>
+            <Dependent Role="OpcionesSeleccionMultiple">
+              <PropertyRef Name="IdSeleccionMultiple" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Preguntas_Dimensiones">
           <End Role="Dimensiones" Type="Self.Dimensiones" Multiplicity="1" />
           <End Role="Preguntas" Type="Self.Preguntas" Multiplicity="*" />
@@ -194,6 +235,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SeleccionMultiples_Dimensiones">
+          <End Role="Dimensiones" Type="Self.Dimensiones" Multiplicity="1" />
+          <End Role="SeleccionMultiples" Type="Self.SeleccionMultiples" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dimensiones">
+              <PropertyRef Name="IdDimension" />
+            </Principal>
+            <Dependent Role="SeleccionMultiples">
+              <PropertyRef Name="IdDimension" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="ClimaModelStoreContainer">
           <EntitySet Name="Afirmaciones" EntityType="Self.Afirmaciones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AsignacionesEmpresas" EntityType="Self.AsignacionesEmpresas" Schema="dbo" store:Type="Tables" />
@@ -202,8 +255,10 @@
           <EntitySet Name="EncuestaPreguntas" EntityType="Self.EncuestaPreguntas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Encuestas" EntityType="Self.Encuestas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EvaluacionAfirmaciones" EntityType="Self.EvaluacionAfirmaciones" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OpcionesSeleccionMultiple" EntityType="Self.OpcionesSeleccionMultiple" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Periodos" EntityType="Self.Periodos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Preguntas" EntityType="Self.Preguntas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SeleccionMultiples" EntityType="Self.SeleccionMultiples" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TipoPreguntas" EntityType="Self.TipoPreguntas" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Afirmaciones_Dimensiones" Association="Self.FK_Afirmaciones_Dimensiones">
             <End Role="Dimensiones" EntitySet="Dimensiones" />
@@ -229,6 +284,10 @@
             <End Role="Preguntas" EntitySet="Preguntas" />
             <End Role="EncuestaPreguntas" EntitySet="EncuestaPreguntas" />
           </AssociationSet>
+          <AssociationSet Name="FK_EncuestaPreguntas_SeleccionMultiples" Association="Self.FK_EncuestaPreguntas_SeleccionMultiples">
+            <End Role="SeleccionMultiples" EntitySet="SeleccionMultiples" />
+            <End Role="EncuestaPreguntas" EntitySet="EncuestaPreguntas" />
+          </AssociationSet>
           <AssociationSet Name="FK_EncuestaPreguntas_TipoPreguntas" Association="Self.FK_EncuestaPreguntas_TipoPreguntas">
             <End Role="TipoPreguntas" EntitySet="TipoPreguntas" />
             <End Role="EncuestaPreguntas" EntitySet="EncuestaPreguntas" />
@@ -237,25 +296,94 @@
             <End Role="Periodos" EntitySet="Periodos" />
             <End Role="Encuestas" EntitySet="Encuestas" />
           </AssociationSet>
+          <AssociationSet Name="FK_OpcionesSeleccionMultiple_SeleccionMultiples" Association="Self.FK_OpcionesSeleccionMultiple_SeleccionMultiples">
+            <End Role="SeleccionMultiples" EntitySet="SeleccionMultiples" />
+            <End Role="OpcionesSeleccionMultiple" EntitySet="OpcionesSeleccionMultiple" />
+          </AssociationSet>
           <AssociationSet Name="FK_Preguntas_Dimensiones" Association="Self.FK_Preguntas_Dimensiones">
             <End Role="Dimensiones" EntitySet="Dimensiones" />
             <End Role="Preguntas" EntitySet="Preguntas" />
           </AssociationSet>
+          <AssociationSet Name="FK_SeleccionMultiples_Dimensiones" Association="Self.FK_SeleccionMultiples_Dimensiones">
+            <End Role="Dimensiones" EntitySet="Dimensiones" />
+            <End Role="SeleccionMultiples" EntitySet="SeleccionMultiples" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ClimaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="ClimaEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Afirmaciones" EntityType="ClimaModel.Afirmaciones" />
+          <EntitySet Name="AsignacionesEmpresas" EntityType="ClimaModel.AsignacionesEmpresas" />
+          <EntitySet Name="Dimensiones" EntityType="ClimaModel.Dimensiones" />
+          <EntitySet Name="Empresas" EntityType="ClimaModel.Empresas" />
+          <EntitySet Name="EncuestaPreguntas" EntityType="ClimaModel.EncuestaPreguntas" />
+          <EntitySet Name="Encuestas" EntityType="ClimaModel.Encuestas" />
+          <EntitySet Name="EvaluacionAfirmaciones" EntityType="ClimaModel.EvaluacionAfirmaciones" />
+          <EntitySet Name="OpcionesSeleccionMultiple" EntityType="ClimaModel.OpcionesSeleccionMultiple" />
+          <EntitySet Name="Periodos" EntityType="ClimaModel.Periodos" />
+          <EntitySet Name="Preguntas" EntityType="ClimaModel.Preguntas" />
+          <EntitySet Name="SeleccionMultiples" EntityType="ClimaModel.SeleccionMultiples" />
+          <EntitySet Name="TipoPreguntas" EntityType="ClimaModel.TipoPreguntas" />
+          <AssociationSet Name="FK_Afirmaciones_Dimensiones" Association="ClimaModel.FK_Afirmaciones_Dimensiones">
+            <End Role="Dimensiones" EntitySet="Dimensiones" />
+            <End Role="Afirmaciones" EntitySet="Afirmaciones" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EncuestaPreguntas_Afirmaciones1" Association="ClimaModel.FK_EncuestaPreguntas_Afirmaciones1">
+            <End Role="Afirmaciones" EntitySet="Afirmaciones" />
+            <End Role="EncuestaPreguntas" EntitySet="EncuestaPreguntas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AsignacionesEmpresas_Empresas" Association="ClimaModel.FK_AsignacionesEmpresas_Empresas">
+            <End Role="Empresas" EntitySet="Empresas" />
+            <End Role="AsignacionesEmpresas" EntitySet="AsignacionesEmpresas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AsignacionesEmpresas_Encuestas" Association="ClimaModel.FK_AsignacionesEmpresas_Encuestas">
+            <End Role="Encuestas" EntitySet="Encuestas" />
+            <End Role="AsignacionesEmpresas" EntitySet="AsignacionesEmpresas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Preguntas_Dimensiones" Association="ClimaModel.FK_Preguntas_Dimensiones">
+            <End Role="Dimensiones" EntitySet="Dimensiones" />
+            <End Role="Preguntas" EntitySet="Preguntas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SeleccionMultiples_Dimensiones" Association="ClimaModel.FK_SeleccionMultiples_Dimensiones">
+            <End Role="Dimensiones" EntitySet="Dimensiones" />
+            <End Role="SeleccionMultiples" EntitySet="SeleccionMultiples" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EncuestaPreguntas_Encuestas" Association="ClimaModel.FK_EncuestaPreguntas_Encuestas">
+            <End Role="Encuestas" EntitySet="Encuestas" />
+            <End Role="EncuestaPreguntas" EntitySet="EncuestaPreguntas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EncuestaPreguntas_Preguntas" Association="ClimaModel.FK_EncuestaPreguntas_Preguntas">
+            <End Role="Preguntas" EntitySet="Preguntas" />
+            <End Role="EncuestaPreguntas" EntitySet="EncuestaPreguntas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EncuestaPreguntas_SeleccionMultiples" Association="ClimaModel.FK_EncuestaPreguntas_SeleccionMultiples">
+            <End Role="SeleccionMultiples" EntitySet="SeleccionMultiples" />
+            <End Role="EncuestaPreguntas" EntitySet="EncuestaPreguntas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EncuestaPreguntas_TipoPreguntas" Association="ClimaModel.FK_EncuestaPreguntas_TipoPreguntas">
+            <End Role="TipoPreguntas" EntitySet="TipoPreguntas" />
+            <End Role="EncuestaPreguntas" EntitySet="EncuestaPreguntas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Encuestas_Periodos" Association="ClimaModel.FK_Encuestas_Periodos">
+            <End Role="Periodos" EntitySet="Periodos" />
+            <End Role="Encuestas" EntitySet="Encuestas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OpcionesSeleccionMultiple_SeleccionMultiples" Association="ClimaModel.FK_OpcionesSeleccionMultiple_SeleccionMultiples">
+            <End Role="SeleccionMultiples" EntitySet="SeleccionMultiples" />
+            <End Role="OpcionesSeleccionMultiple" EntitySet="OpcionesSeleccionMultiple" />
+          </AssociationSet>
+        </EntityContainer>
         <EntityType Name="Afirmaciones">
           <Key>
             <PropertyRef Name="IdAfirmacion" />
           </Key>
           <Property Name="IdAfirmacion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Enunciado" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Enunciado" Type="String" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="false" />
           <Property Name="IdDimension" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Dimensiones" Relationship="Self.FK_Afirmaciones_Dimensiones" FromRole="Afirmaciones" ToRole="Dimensiones" />
-          <NavigationProperty Name="EncuestaPreguntas" Relationship="Self.FK_EncuestaPreguntas_Afirmaciones1" FromRole="Afirmaciones" ToRole="EncuestaPreguntas" />
+          <NavigationProperty Name="Dimensiones" Relationship="ClimaModel.FK_Afirmaciones_Dimensiones" FromRole="Afirmaciones" ToRole="Dimensiones" />
+          <NavigationProperty Name="EncuestaPreguntas" Relationship="ClimaModel.FK_EncuestaPreguntas_Afirmaciones1" FromRole="Afirmaciones" ToRole="EncuestaPreguntas" />
         </EntityType>
         <EntityType Name="AsignacionesEmpresas">
           <Key>
@@ -265,26 +393,27 @@
           <Property Name="IdEncuesta" Type="Int32" Nullable="false" />
           <Property Name="cod_empresa" Type="Int32" Nullable="false" />
           <Property Name="Observaciones" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Empresas" Relationship="Self.FK_AsignacionesEmpresas_Empresas" FromRole="AsignacionesEmpresas" ToRole="Empresas" />
-          <NavigationProperty Name="Encuestas" Relationship="Self.FK_AsignacionesEmpresas_Encuestas" FromRole="AsignacionesEmpresas" ToRole="Encuestas" />
+          <NavigationProperty Name="Empresas" Relationship="ClimaModel.FK_AsignacionesEmpresas_Empresas" FromRole="AsignacionesEmpresas" ToRole="Empresas" />
+          <NavigationProperty Name="Encuestas" Relationship="ClimaModel.FK_AsignacionesEmpresas_Encuestas" FromRole="AsignacionesEmpresas" ToRole="Encuestas" />
         </EntityType>
         <EntityType Name="Dimensiones">
           <Key>
             <PropertyRef Name="IdDimension" />
           </Key>
           <Property Name="IdDimension" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
           <Property Name="Descripcion" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Afirmaciones" Relationship="Self.FK_Afirmaciones_Dimensiones" FromRole="Dimensiones" ToRole="Afirmaciones" />
-          <NavigationProperty Name="Preguntas" Relationship="Self.FK_Preguntas_Dimensiones" FromRole="Dimensiones" ToRole="Preguntas" />
+          <NavigationProperty Name="Afirmaciones" Relationship="ClimaModel.FK_Afirmaciones_Dimensiones" FromRole="Dimensiones" ToRole="Afirmaciones" />
+          <NavigationProperty Name="Preguntas" Relationship="ClimaModel.FK_Preguntas_Dimensiones" FromRole="Dimensiones" ToRole="Preguntas" />
+          <NavigationProperty Name="SeleccionMultiples" Relationship="ClimaModel.FK_SeleccionMultiples_Dimensiones" FromRole="Dimensiones" ToRole="SeleccionMultiples" />
         </EntityType>
         <EntityType Name="Empresas">
           <Key>
             <PropertyRef Name="cod_empresa" />
           </Key>
           <Property Name="cod_empresa" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Empresa" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="AsignacionesEmpresas" Relationship="Self.FK_AsignacionesEmpresas_Empresas" FromRole="Empresas" ToRole="AsignacionesEmpresas" />
+          <Property Name="Empresa" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="AsignacionesEmpresas" Relationship="ClimaModel.FK_AsignacionesEmpresas_Empresas" FromRole="Empresas" ToRole="AsignacionesEmpresas" />
         </EntityType>
         <EntityType Name="EncuestaPreguntas">
           <Key>
@@ -292,63 +421,85 @@
           </Key>
           <Property Name="IdEncuesta" Type="Int32" Nullable="false" />
           <Property Name="IdTipoPregunta" Type="Int16" Nullable="false" />
-          <Property Name="IdAfirmacion" Type="Int32" Nullable="false" />
+          <Property Name="IdAfirmacion" Type="Int32" />
           <Property Name="IdPregunta" Type="Int32" />
           <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="Afirmaciones" Relationship="Self.FK_EncuestaPreguntas_Afirmaciones1" FromRole="EncuestaPreguntas" ToRole="Afirmaciones" />
-          <NavigationProperty Name="Encuestas" Relationship="Self.FK_EncuestaPreguntas_Encuestas" FromRole="EncuestaPreguntas" ToRole="Encuestas" />
-          <NavigationProperty Name="Preguntas" Relationship="Self.FK_EncuestaPreguntas_Preguntas" FromRole="EncuestaPreguntas" ToRole="Preguntas" />
-          <NavigationProperty Name="TipoPreguntas" Relationship="Self.FK_EncuestaPreguntas_TipoPreguntas" FromRole="EncuestaPreguntas" ToRole="TipoPreguntas" />
+          <Property Name="IdSeleccionMultiple" Type="Int32" />
+          <NavigationProperty Name="Afirmaciones" Relationship="ClimaModel.FK_EncuestaPreguntas_Afirmaciones1" FromRole="EncuestaPreguntas" ToRole="Afirmaciones" />
+          <NavigationProperty Name="Encuestas" Relationship="ClimaModel.FK_EncuestaPreguntas_Encuestas" FromRole="EncuestaPreguntas" ToRole="Encuestas" />
+          <NavigationProperty Name="Preguntas" Relationship="ClimaModel.FK_EncuestaPreguntas_Preguntas" FromRole="EncuestaPreguntas" ToRole="Preguntas" />
+          <NavigationProperty Name="SeleccionMultiples" Relationship="ClimaModel.FK_EncuestaPreguntas_SeleccionMultiples" FromRole="EncuestaPreguntas" ToRole="SeleccionMultiples" />
+          <NavigationProperty Name="TipoPreguntas" Relationship="ClimaModel.FK_EncuestaPreguntas_TipoPreguntas" FromRole="EncuestaPreguntas" ToRole="TipoPreguntas" />
         </EntityType>
         <EntityType Name="Encuestas">
           <Key>
             <PropertyRef Name="IdEncuesta" />
           </Key>
           <Property Name="IdPeriodo" Type="Int16" Nullable="false" />
-          <Property Name="Nombre" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Descripcion" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="Descripcion" Type="String" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="false" />
           <Property Name="Activo" Type="Int16" Nullable="false" />
           <Property Name="IdEncuesta" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="AsignacionesEmpresas" Relationship="Self.FK_AsignacionesEmpresas_Encuestas" FromRole="Encuestas" ToRole="AsignacionesEmpresas" />
-          <NavigationProperty Name="EncuestaPreguntas" Relationship="Self.FK_EncuestaPreguntas_Encuestas" FromRole="Encuestas" ToRole="EncuestaPreguntas" />
-          <NavigationProperty Name="Periodos" Relationship="Self.FK_Encuestas_Periodos" FromRole="Encuestas" ToRole="Periodos" />
+          <NavigationProperty Name="AsignacionesEmpresas" Relationship="ClimaModel.FK_AsignacionesEmpresas_Encuestas" FromRole="Encuestas" ToRole="AsignacionesEmpresas" />
+          <NavigationProperty Name="EncuestaPreguntas" Relationship="ClimaModel.FK_EncuestaPreguntas_Encuestas" FromRole="Encuestas" ToRole="EncuestaPreguntas" />
+          <NavigationProperty Name="Periodos" Relationship="ClimaModel.FK_Encuestas_Periodos" FromRole="Encuestas" ToRole="Periodos" />
         </EntityType>
         <EntityType Name="EvaluacionAfirmaciones">
           <Key>
             <PropertyRef Name="Evaluacion" />
           </Key>
           <Property Name="Evaluacion" Type="Int16" Nullable="false" />
-          <Property Name="Descripcion" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Descripcion" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="OpcionesSeleccionMultiple">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="IdSeleccionMultiple" Type="Int32" Nullable="false" />
+          <Property Name="Valor" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="SeleccionMultiples" Relationship="ClimaModel.FK_OpcionesSeleccionMultiple_SeleccionMultiples" FromRole="OpcionesSeleccionMultiple" ToRole="SeleccionMultiples" />
         </EntityType>
         <EntityType Name="Periodos">
           <Key>
             <PropertyRef Name="IdPeriodo" />
           </Key>
           <Property Name="IdPeriodo" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Encuestas" Relationship="Self.FK_Encuestas_Periodos" FromRole="Periodos" ToRole="Encuestas" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Encuestas" Relationship="ClimaModel.FK_Encuestas_Periodos" FromRole="Periodos" ToRole="Encuestas" />
         </EntityType>
         <EntityType Name="Preguntas">
           <Key>
             <PropertyRef Name="IdPregunta" />
           </Key>
           <Property Name="IdPregunta" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Enunciado" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Enunciado" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="false" />
           <Property Name="IdDimension" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Dimensiones" Relationship="Self.FK_Preguntas_Dimensiones" FromRole="Preguntas" ToRole="Dimensiones" />
-          <NavigationProperty Name="EncuestaPreguntas" Relationship="Self.FK_EncuestaPreguntas_Preguntas" FromRole="Preguntas" ToRole="EncuestaPreguntas" />
+          <NavigationProperty Name="Dimensiones" Relationship="ClimaModel.FK_Preguntas_Dimensiones" FromRole="Preguntas" ToRole="Dimensiones" />
+          <NavigationProperty Name="EncuestaPreguntas" Relationship="ClimaModel.FK_EncuestaPreguntas_Preguntas" FromRole="Preguntas" ToRole="EncuestaPreguntas" />
+        </EntityType>
+        <EntityType Name="SeleccionMultiples">
+          <Key>
+            <PropertyRef Name="IdSeleccionMultiple" />
+          </Key>
+          <Property Name="IdSeleccionMultiple" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Enunciado" Type="String" Nullable="false" MaxLength="512" FixedLength="false" Unicode="false" />
+          <Property Name="IdDimension" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Dimensiones" Relationship="ClimaModel.FK_SeleccionMultiples_Dimensiones" FromRole="SeleccionMultiples" ToRole="Dimensiones" />
+          <NavigationProperty Name="EncuestaPreguntas" Relationship="ClimaModel.FK_EncuestaPreguntas_SeleccionMultiples" FromRole="SeleccionMultiples" ToRole="EncuestaPreguntas" />
+          <NavigationProperty Name="OpcionesSeleccionMultiple" Relationship="ClimaModel.FK_OpcionesSeleccionMultiple_SeleccionMultiples" FromRole="SeleccionMultiples" ToRole="OpcionesSeleccionMultiple" />
         </EntityType>
         <EntityType Name="TipoPreguntas">
           <Key>
             <PropertyRef Name="IdTipoPregunta" />
           </Key>
           <Property Name="IdTipoPregunta" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Tipo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="EncuestaPreguntas" Relationship="Self.FK_EncuestaPreguntas_TipoPreguntas" FromRole="TipoPreguntas" ToRole="EncuestaPreguntas" />
+          <Property Name="Tipo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="EncuestaPreguntas" Relationship="ClimaModel.FK_EncuestaPreguntas_TipoPreguntas" FromRole="TipoPreguntas" ToRole="EncuestaPreguntas" />
         </EntityType>
         <Association Name="FK_Afirmaciones_Dimensiones">
-          <End Role="Dimensiones" Type="Self.Dimensiones" Multiplicity="1" />
-          <End Role="Afirmaciones" Type="Self.Afirmaciones" Multiplicity="*" />
+          <End Type="ClimaModel.Dimensiones" Role="Dimensiones" Multiplicity="1" />
+          <End Type="ClimaModel.Afirmaciones" Role="Afirmaciones" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Dimensiones">
               <PropertyRef Name="IdDimension" />
@@ -359,8 +510,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_EncuestaPreguntas_Afirmaciones1">
-          <End Role="Afirmaciones" Type="Self.Afirmaciones" Multiplicity="1" />
-          <End Role="EncuestaPreguntas" Type="Self.EncuestaPreguntas" Multiplicity="*" />
+          <End Type="ClimaModel.Afirmaciones" Role="Afirmaciones" Multiplicity="0..1" />
+          <End Type="ClimaModel.EncuestaPreguntas" Role="EncuestaPreguntas" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Afirmaciones">
               <PropertyRef Name="IdAfirmacion" />
@@ -371,8 +522,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_AsignacionesEmpresas_Empresas">
-          <End Role="Empresas" Type="Self.Empresas" Multiplicity="1" />
-          <End Role="AsignacionesEmpresas" Type="Self.AsignacionesEmpresas" Multiplicity="*" />
+          <End Type="ClimaModel.Empresas" Role="Empresas" Multiplicity="1" />
+          <End Type="ClimaModel.AsignacionesEmpresas" Role="AsignacionesEmpresas" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Empresas">
               <PropertyRef Name="cod_empresa" />
@@ -383,8 +534,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_AsignacionesEmpresas_Encuestas">
-          <End Role="Encuestas" Type="Self.Encuestas" Multiplicity="1" />
-          <End Role="AsignacionesEmpresas" Type="Self.AsignacionesEmpresas" Multiplicity="*" />
+          <End Type="ClimaModel.Encuestas" Role="Encuestas" Multiplicity="1" />
+          <End Type="ClimaModel.AsignacionesEmpresas" Role="AsignacionesEmpresas" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Encuestas">
               <PropertyRef Name="IdEncuesta" />
@@ -395,8 +546,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Preguntas_Dimensiones">
-          <End Role="Dimensiones" Type="Self.Dimensiones" Multiplicity="1" />
-          <End Role="Preguntas" Type="Self.Preguntas" Multiplicity="*" />
+          <End Type="ClimaModel.Dimensiones" Role="Dimensiones" Multiplicity="1" />
+          <End Type="ClimaModel.Preguntas" Role="Preguntas" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Dimensiones">
               <PropertyRef Name="IdDimension" />
@@ -406,9 +557,21 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SeleccionMultiples_Dimensiones">
+          <End Type="ClimaModel.Dimensiones" Role="Dimensiones" Multiplicity="1" />
+          <End Type="ClimaModel.SeleccionMultiples" Role="SeleccionMultiples" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dimensiones">
+              <PropertyRef Name="IdDimension" />
+            </Principal>
+            <Dependent Role="SeleccionMultiples">
+              <PropertyRef Name="IdDimension" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_EncuestaPreguntas_Encuestas">
-          <End Role="Encuestas" Type="Self.Encuestas" Multiplicity="1" />
-          <End Role="EncuestaPreguntas" Type="Self.EncuestaPreguntas" Multiplicity="*" />
+          <End Type="ClimaModel.Encuestas" Role="Encuestas" Multiplicity="1" />
+          <End Type="ClimaModel.EncuestaPreguntas" Role="EncuestaPreguntas" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Encuestas">
               <PropertyRef Name="IdEncuesta" />
@@ -419,8 +582,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_EncuestaPreguntas_Preguntas">
-          <End Role="Preguntas" Type="Self.Preguntas" Multiplicity="0..1" />
-          <End Role="EncuestaPreguntas" Type="Self.EncuestaPreguntas" Multiplicity="*" />
+          <End Type="ClimaModel.Preguntas" Role="Preguntas" Multiplicity="0..1" />
+          <End Type="ClimaModel.EncuestaPreguntas" Role="EncuestaPreguntas" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Preguntas">
               <PropertyRef Name="IdPregunta" />
@@ -430,9 +593,21 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_EncuestaPreguntas_SeleccionMultiples">
+          <End Type="ClimaModel.SeleccionMultiples" Role="SeleccionMultiples" Multiplicity="0..1" />
+          <End Type="ClimaModel.EncuestaPreguntas" Role="EncuestaPreguntas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SeleccionMultiples">
+              <PropertyRef Name="IdSeleccionMultiple" />
+            </Principal>
+            <Dependent Role="EncuestaPreguntas">
+              <PropertyRef Name="IdSeleccionMultiple" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_EncuestaPreguntas_TipoPreguntas">
-          <End Role="TipoPreguntas" Type="Self.TipoPreguntas" Multiplicity="1" />
-          <End Role="EncuestaPreguntas" Type="Self.EncuestaPreguntas" Multiplicity="*" />
+          <End Type="ClimaModel.TipoPreguntas" Role="TipoPreguntas" Multiplicity="1" />
+          <End Type="ClimaModel.EncuestaPreguntas" Role="EncuestaPreguntas" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="TipoPreguntas">
               <PropertyRef Name="IdTipoPregunta" />
@@ -443,8 +618,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Encuestas_Periodos">
-          <End Role="Periodos" Type="Self.Periodos" Multiplicity="1" />
-          <End Role="Encuestas" Type="Self.Encuestas" Multiplicity="*" />
+          <End Type="ClimaModel.Periodos" Role="Periodos" Multiplicity="1" />
+          <End Type="ClimaModel.Encuestas" Role="Encuestas" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Periodos">
               <PropertyRef Name="IdPeriodo" />
@@ -454,55 +629,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="ClimaEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Afirmaciones" EntityType="Self.Afirmaciones" />
-          <EntitySet Name="AsignacionesEmpresas" EntityType="Self.AsignacionesEmpresas" />
-          <EntitySet Name="Dimensiones" EntityType="Self.Dimensiones" />
-          <EntitySet Name="Empresas" EntityType="Self.Empresas" />
-          <EntitySet Name="EncuestaPreguntas" EntityType="Self.EncuestaPreguntas" />
-          <EntitySet Name="Encuestas" EntityType="Self.Encuestas" />
-          <EntitySet Name="EvaluacionAfirmaciones" EntityType="Self.EvaluacionAfirmaciones" />
-          <EntitySet Name="Periodos" EntityType="Self.Periodos" />
-          <EntitySet Name="Preguntas" EntityType="Self.Preguntas" />
-          <EntitySet Name="TipoPreguntas" EntityType="Self.TipoPreguntas" />
-          <AssociationSet Name="FK_Afirmaciones_Dimensiones" Association="Self.FK_Afirmaciones_Dimensiones">
-            <End Role="Dimensiones" EntitySet="Dimensiones" />
-            <End Role="Afirmaciones" EntitySet="Afirmaciones" />
-          </AssociationSet>
-          <AssociationSet Name="FK_EncuestaPreguntas_Afirmaciones1" Association="Self.FK_EncuestaPreguntas_Afirmaciones1">
-            <End Role="Afirmaciones" EntitySet="Afirmaciones" />
-            <End Role="EncuestaPreguntas" EntitySet="EncuestaPreguntas" />
-          </AssociationSet>
-          <AssociationSet Name="FK_AsignacionesEmpresas_Empresas" Association="Self.FK_AsignacionesEmpresas_Empresas">
-            <End Role="Empresas" EntitySet="Empresas" />
-            <End Role="AsignacionesEmpresas" EntitySet="AsignacionesEmpresas" />
-          </AssociationSet>
-          <AssociationSet Name="FK_AsignacionesEmpresas_Encuestas" Association="Self.FK_AsignacionesEmpresas_Encuestas">
-            <End Role="Encuestas" EntitySet="Encuestas" />
-            <End Role="AsignacionesEmpresas" EntitySet="AsignacionesEmpresas" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Preguntas_Dimensiones" Association="Self.FK_Preguntas_Dimensiones">
-            <End Role="Dimensiones" EntitySet="Dimensiones" />
-            <End Role="Preguntas" EntitySet="Preguntas" />
-          </AssociationSet>
-          <AssociationSet Name="FK_EncuestaPreguntas_Encuestas" Association="Self.FK_EncuestaPreguntas_Encuestas">
-            <End Role="Encuestas" EntitySet="Encuestas" />
-            <End Role="EncuestaPreguntas" EntitySet="EncuestaPreguntas" />
-          </AssociationSet>
-          <AssociationSet Name="FK_EncuestaPreguntas_Preguntas" Association="Self.FK_EncuestaPreguntas_Preguntas">
-            <End Role="Preguntas" EntitySet="Preguntas" />
-            <End Role="EncuestaPreguntas" EntitySet="EncuestaPreguntas" />
-          </AssociationSet>
-          <AssociationSet Name="FK_EncuestaPreguntas_TipoPreguntas" Association="Self.FK_EncuestaPreguntas_TipoPreguntas">
-            <End Role="TipoPreguntas" EntitySet="TipoPreguntas" />
-            <End Role="EncuestaPreguntas" EntitySet="EncuestaPreguntas" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Encuestas_Periodos" Association="Self.FK_Encuestas_Periodos">
-            <End Role="Periodos" EntitySet="Periodos" />
-            <End Role="Encuestas" EntitySet="Encuestas" />
-          </AssociationSet>
-        </EntityContainer>
-      </Schema>
+        <Association Name="FK_OpcionesSeleccionMultiple_SeleccionMultiples">
+          <End Type="ClimaModel.SeleccionMultiples" Role="SeleccionMultiples" Multiplicity="1" />
+          <End Type="ClimaModel.OpcionesSeleccionMultiple" Role="OpcionesSeleccionMultiple" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SeleccionMultiples">
+              <PropertyRef Name="IdSeleccionMultiple" />
+            </Principal>
+            <Dependent Role="OpcionesSeleccionMultiple">
+              <PropertyRef Name="IdSeleccionMultiple" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -511,90 +650,109 @@
           <EntitySetMapping Name="Afirmaciones">
             <EntityTypeMapping TypeName="ClimaModel.Afirmaciones">
               <MappingFragment StoreEntitySet="Afirmaciones">
-                <ScalarProperty Name="IdAfirmacion" ColumnName="IdAfirmacion" />
-                <ScalarProperty Name="Enunciado" ColumnName="Enunciado" />
                 <ScalarProperty Name="IdDimension" ColumnName="IdDimension" />
+                <ScalarProperty Name="Enunciado" ColumnName="Enunciado" />
+                <ScalarProperty Name="IdAfirmacion" ColumnName="IdAfirmacion" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="AsignacionesEmpresas">
             <EntityTypeMapping TypeName="ClimaModel.AsignacionesEmpresas">
               <MappingFragment StoreEntitySet="AsignacionesEmpresas">
-                <ScalarProperty Name="IdEncuesta" ColumnName="IdEncuesta" />
-                <ScalarProperty Name="cod_empresa" ColumnName="cod_empresa" />
                 <ScalarProperty Name="Observaciones" ColumnName="Observaciones" />
+                <ScalarProperty Name="cod_empresa" ColumnName="cod_empresa" />
+                <ScalarProperty Name="IdEncuesta" ColumnName="IdEncuesta" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Dimensiones">
             <EntityTypeMapping TypeName="ClimaModel.Dimensiones">
               <MappingFragment StoreEntitySet="Dimensiones">
-                <ScalarProperty Name="IdDimension" ColumnName="IdDimension" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdDimension" ColumnName="IdDimension" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Empresas">
             <EntityTypeMapping TypeName="ClimaModel.Empresas">
               <MappingFragment StoreEntitySet="Empresas">
-                <ScalarProperty Name="cod_empresa" ColumnName="cod_empresa" />
                 <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+                <ScalarProperty Name="cod_empresa" ColumnName="cod_empresa" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="EncuestaPreguntas">
             <EntityTypeMapping TypeName="ClimaModel.EncuestaPreguntas">
               <MappingFragment StoreEntitySet="EncuestaPreguntas">
-                <ScalarProperty Name="IdEncuesta" ColumnName="IdEncuesta" />
-                <ScalarProperty Name="IdTipoPregunta" ColumnName="IdTipoPregunta" />
-                <ScalarProperty Name="IdAfirmacion" ColumnName="IdAfirmacion" />
-                <ScalarProperty Name="IdPregunta" ColumnName="IdPregunta" />
+                <ScalarProperty Name="IdSeleccionMultiple" ColumnName="IdSeleccionMultiple" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="IdPregunta" ColumnName="IdPregunta" />
+                <ScalarProperty Name="IdAfirmacion" ColumnName="IdAfirmacion" />
+                <ScalarProperty Name="IdTipoPregunta" ColumnName="IdTipoPregunta" />
+                <ScalarProperty Name="IdEncuesta" ColumnName="IdEncuesta" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Encuestas">
             <EntityTypeMapping TypeName="ClimaModel.Encuestas">
               <MappingFragment StoreEntitySet="Encuestas">
-                <ScalarProperty Name="IdPeriodo" ColumnName="IdPeriodo" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
-                <ScalarProperty Name="Activo" ColumnName="Activo" />
                 <ScalarProperty Name="IdEncuesta" ColumnName="IdEncuesta" />
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdPeriodo" ColumnName="IdPeriodo" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="EvaluacionAfirmaciones">
             <EntityTypeMapping TypeName="ClimaModel.EvaluacionAfirmaciones">
               <MappingFragment StoreEntitySet="EvaluacionAfirmaciones">
-                <ScalarProperty Name="Evaluacion" ColumnName="Evaluacion" />
                 <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Evaluacion" ColumnName="Evaluacion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OpcionesSeleccionMultiple">
+            <EntityTypeMapping TypeName="ClimaModel.OpcionesSeleccionMultiple">
+              <MappingFragment StoreEntitySet="OpcionesSeleccionMultiple">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Valor" ColumnName="Valor" />
+                <ScalarProperty Name="IdSeleccionMultiple" ColumnName="IdSeleccionMultiple" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Periodos">
             <EntityTypeMapping TypeName="ClimaModel.Periodos">
               <MappingFragment StoreEntitySet="Periodos">
-                <ScalarProperty Name="IdPeriodo" ColumnName="IdPeriodo" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdPeriodo" ColumnName="IdPeriodo" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Preguntas">
             <EntityTypeMapping TypeName="ClimaModel.Preguntas">
               <MappingFragment StoreEntitySet="Preguntas">
-                <ScalarProperty Name="IdPregunta" ColumnName="IdPregunta" />
-                <ScalarProperty Name="Enunciado" ColumnName="Enunciado" />
                 <ScalarProperty Name="IdDimension" ColumnName="IdDimension" />
+                <ScalarProperty Name="Enunciado" ColumnName="Enunciado" />
+                <ScalarProperty Name="IdPregunta" ColumnName="IdPregunta" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SeleccionMultiples">
+            <EntityTypeMapping TypeName="ClimaModel.SeleccionMultiples">
+              <MappingFragment StoreEntitySet="SeleccionMultiples">
+                <ScalarProperty Name="IdDimension" ColumnName="IdDimension" />
+                <ScalarProperty Name="Enunciado" ColumnName="Enunciado" />
+                <ScalarProperty Name="IdSeleccionMultiple" ColumnName="IdSeleccionMultiple" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TipoPreguntas">
             <EntityTypeMapping TypeName="ClimaModel.TipoPreguntas">
               <MappingFragment StoreEntitySet="TipoPreguntas">
-                <ScalarProperty Name="IdTipoPregunta" ColumnName="IdTipoPregunta" />
                 <ScalarProperty Name="Tipo" ColumnName="Tipo" />
+                <ScalarProperty Name="IdTipoPregunta" ColumnName="IdTipoPregunta" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

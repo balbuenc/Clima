@@ -157,8 +157,10 @@
     <Compile Include="Controllers\EncuestasController.cs" />
     <Compile Include="Controllers\EvaluacionAfirmacionesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\OpcionesSeleccionMultiplesController.cs" />
     <Compile Include="Controllers\PeriodosController.cs" />
     <Compile Include="Controllers\PreguntasController.cs" />
+    <Compile Include="Controllers\SeleccionMultiplesController.cs" />
     <Compile Include="Controllers\TipoPreguntasController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -199,10 +201,16 @@
     <Compile Include="Models\EvaluacionAfirmaciones.cs">
       <DependentUpon>ClimaEF.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\OpcionesSeleccionMultiple.cs">
+      <DependentUpon>ClimaEF.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Periodos.cs">
       <DependentUpon>ClimaEF.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Preguntas.cs">
+      <DependentUpon>ClimaEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SeleccionMultiples.cs">
       <DependentUpon>ClimaEF.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TipoPreguntas.cs">
@@ -305,16 +313,26 @@
     <Content Include="Views\Afirmaciones\Details.cshtml" />
     <Content Include="Views\Afirmaciones\Edit.cshtml" />
     <Content Include="Views\Afirmaciones\Index.cshtml" />
-    <Content Include="Views\EncuestaPreguntas\Create.cshtml" />
-    <Content Include="Views\EncuestaPreguntas\Delete.cshtml" />
-    <Content Include="Views\EncuestaPreguntas\Details.cshtml" />
-    <Content Include="Views\EncuestaPreguntas\Edit.cshtml" />
-    <Content Include="Views\EncuestaPreguntas\Index.cshtml" />
     <Content Include="Views\Preguntas\Create.cshtml" />
     <Content Include="Views\Preguntas\Delete.cshtml" />
     <Content Include="Views\Preguntas\Details.cshtml" />
     <Content Include="Views\Preguntas\Edit.cshtml" />
     <Content Include="Views\Preguntas\Index.cshtml" />
+    <Content Include="Views\EncuestaPreguntas\Create.cshtml" />
+    <Content Include="Views\EncuestaPreguntas\Delete.cshtml" />
+    <Content Include="Views\EncuestaPreguntas\Details.cshtml" />
+    <Content Include="Views\EncuestaPreguntas\Edit.cshtml" />
+    <Content Include="Views\EncuestaPreguntas\Index.cshtml" />
+    <Content Include="Views\SeleccionMultiples\Create.cshtml" />
+    <Content Include="Views\SeleccionMultiples\Delete.cshtml" />
+    <Content Include="Views\SeleccionMultiples\Details.cshtml" />
+    <Content Include="Views\SeleccionMultiples\Edit.cshtml" />
+    <Content Include="Views\SeleccionMultiples\Index.cshtml" />
+    <Content Include="Views\OpcionesSeleccionMultiples\Create.cshtml" />
+    <Content Include="Views\OpcionesSeleccionMultiples\Delete.cshtml" />
+    <Content Include="Views\OpcionesSeleccionMultiples\Details.cshtml" />
+    <Content Include="Views\OpcionesSeleccionMultiples\Edit.cshtml" />
+    <Content Include="Views\OpcionesSeleccionMultiples\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
