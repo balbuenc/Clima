@@ -1,0 +1,22 @@
+﻿
+
+@model Clima.Models.ViewModels.Country
+@{
+    ViewBag.Title = "Radiobutton List inside foreach in MVC 5 using model || Chikkanti.Wordpress.com";
+}
+<h2>Radiobutton List inside foreach in MVC 5</h2>
+
+@using (Html.BeginForm())
+{
+    foreach (var city in Model.Cities)
+    {
+        @Html.RadioButtonFor(g => g.SelectedCityId, city.Id) @Html.Label(city.CityName)
+        <br />
+    }
+    <br />
+    <input type="submit" value="Submit" /><br />
+    if (!string.IsNullOrEmpty(Model.SelectedCityName))
+    {
+        @Html.Label("Your selected city is: " + Model.SelectedCityName);
+    }
+}
