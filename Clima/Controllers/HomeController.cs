@@ -1,5 +1,4 @@
-﻿using Clima.Models.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -9,17 +8,9 @@ namespace Clima.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index(Country model)
+        public ActionResult Index()
         {
-            List<City> cities = new List<City>() {
-                new City(){Id = 1, CityName="Hyderabad"},
-                new City(){Id = 2, CityName="Ongole"},
-                new City(){Id = 3, CityName="Guntur"},
-                new City(){Id = 4, CityName="Vijayawada"}
-            };
-
-            model.Cities = cities;
-            return View(model);
+            return View();
         }
 
         public ActionResult About()
