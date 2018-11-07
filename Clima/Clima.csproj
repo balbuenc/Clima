@@ -219,7 +219,6 @@
     <Compile Include="Models\TipoPreguntas.cs">
       <DependentUpon>ClimaEF.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ViewModels\Country.cs" />
     <Compile Include="Models\ViewModels\Cuestionario.cs" />
     <Compile Include="Models\ViewModels\Encuesta.cs" />
     <Compile Include="Models\ViewModels\EncuestaPregunta.cs" />
