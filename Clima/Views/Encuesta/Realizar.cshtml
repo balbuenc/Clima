@@ -1,0 +1,57 @@
+﻿@model IList<Clima.Models.ViewModels.EncuestaPregunta>
+@{
+    ViewBag.Title = "Encuesta";
+}
+
+<h3>@Model[0].Encuesta.Descripcion</h3>
+<hr />
+@using (Html.BeginForm("Realizar", "Encuesta", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <div class="container">
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+            int b = i + 1;
+            <h6><b> @b.ToString().  @Model[i].Cuestionario.Enunciado</b></h6>
+            switch (Model[i].TipoPregunta.Tipo.ToLower())
+            {
+                case "afirmaciones":
+                case "selección multiple":
+                    for (int c = 0; c < Model[i].Cuestionario.OpcionesSeleccion.Count(); c++)
+                    {
+                        <div class="form-group" style="font-size:smaller">
+                            <div class="col-sm-10">
+                                <div class="checkbox">
+                                    @Html.RadioButton(Model[i].Cuestionario.Enunciado, Model[i].Cuestionario.OpcionesSeleccion[c].Id) @Html.Label(Model[i].Cuestionario.OpcionesSeleccion[c].Descripcion)
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    break;
+
+                case "preguntas abiertas":
+                    for (int p = 0; p < Model[i].Cuestionario.OpcionesSeleccion.Count(); p++)
+                    {
+                        <div style="font-size:smaller">
+                            <p>
+                                @Html.TextBoxFor(m => Model[i].Cuestionario.OpcionesSeleccion[p].Respuesta, new { @class = "form-control" })
+                            </p>
+                        </div>
+                    }
+
+                    break;
+            }
+        }
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-lg btn-primary" value="Registrar" />
+            </div>
+        </div>
+    </div>
+
+}
+
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+}
