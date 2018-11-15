@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Clima.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,6 +11,19 @@ namespace Clima.Controllers
     {
         public ActionResult Index()
         {
+            var user = System.Web.HttpContext.Current.User.Identity.Name;
+            using (climaEntities db = new climaEntities())
+            {
+                var idEncuesta = 1;
+
+                var respuesta = db.Respuestas.Where(r => r.IdEncuesta == idEncuesta && r.login.Equals(user)).ToList();
+
+                if (respuesta.Any())
+                {
+                    ViewData["realizado"] = "OK";
+                }
+            }
+
             return View();
         }
 

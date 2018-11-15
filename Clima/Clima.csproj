@@ -213,6 +213,9 @@
     <Compile Include="Models\Preguntas.cs">
       <DependentUpon>ClimaEF.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Respuestas.cs">
+      <DependentUpon>ClimaEF.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SeleccionMultiples.cs">
       <DependentUpon>ClimaEF.tt</DependentUpon>
     </Compile>

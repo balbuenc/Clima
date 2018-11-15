@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-
+using System.ComponentModel.DataAnnotations;
 
 namespace Clima.Models.ViewModels
 {
@@ -10,11 +10,14 @@ namespace Clima.Models.ViewModels
             OpcionesSeleccion = new List<OpcionSeleccion>();
         }
 
+        [Key]
         public int IdCuestionario { get; set; }
+        [StringLength(250)]
+        [Required]
         public string Enunciado { get; set; }
         public int IdDimension { get; set; }
-        public int CheckId { get; set; }
-        public string CheckSeleccionado { get; set; }
+        [Required]
+        public int SelectId { get; set; }
 
         public List<OpcionSeleccion> OpcionesSeleccion { get; set; }
     }

@@ -1,27 +1,84 @@
-﻿@model IList<Clima.Models.ViewModels.EncuestaPregunta>
+﻿@model Clima.Models.ViewModels.Encuesta
 @{
     ViewBag.Title = "Encuesta";
 }
 
-<h3>@Model[0].Encuesta.Descripcion</h3>
-<hr />
+
+
 @using (Html.BeginForm("Realizar", "Encuesta", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
+
+    @Html.AntiForgeryToken()
+    <h3>
+        @Model.Descripcion
+    </h3>
+ 
+    @Html.HiddenFor(model => model.Descripcion)
+    @Html.HiddenFor(model => model.IdEncuesta)
+    @Html.HiddenFor(model => model.Nombre)
+  
+    <hr />
+    
     <div class="container">
-        @for (int i = 0; i < Model.Count(); i++)
+        @for (int i = 0; i < Model.EncuestaPreguntas.Count(); i++)
         {
             int b = i + 1;
-            <h6><b> @b.ToString().  @Model[i].Cuestionario.Enunciado</b></h6>
-            switch (Model[i].TipoPregunta.Tipo.ToLower())
+
+            @Html.HiddenFor(model => Model.EncuestaPreguntas[i].TipoPregunta.Tipo)
+            @Html.HiddenFor(model => Model.EncuestaPreguntas[i].TipoPregunta.IdTipoPregunta)
+            @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.IdCuestionario)
+            @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Id)
+
+            switch (Model.EncuestaPreguntas[i].TipoPregunta.Tipo.ToLower())
             {
                 case "afirmaciones":
+                    <div class="row">
+                        <div class="col-6">
+                            <h6><b> @b.ToString().  @Model.EncuestaPreguntas[i].Cuestionario.Enunciado</b></h6>
+                        </div>
+                        <div class="col-6">
+                            <div class="row">
+                                @for (int o = 0; o < Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion.Count(); o++)
+                                {
+                                    int num = @o + 1;
+
+                                    <div class="form-group" style="font-size:smaller">
+                                        <div class="col-2">
+                                            <div class="checkbox">
+                                                @num.ToString()
+                                                @Html.RadioButtonFor(model => Model.EncuestaPreguntas[i].Cuestionario.SelectId, Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Id)
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <h5>Referencias</h5>
+                    for (int o = 0; o < Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion.Count(); o++)
+                    {
+                        <div class="row">
+                            @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.IdCuestionario)
+                            <div class="col-12" style="font-size:smaller">
+                                @Html.Label(Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Id.ToString())
+                                -
+                                @Html.Label(Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Descripcion)
+                            </div>
+                        </div>
+                    }
+
+                    break;
                 case "selección multiple":
-                    for (int c = 0; c < Model[i].Cuestionario.OpcionesSeleccion.Count(); c++)
+                    <h6><b> @b.ToString().  @Model.EncuestaPreguntas[i].Cuestionario.Enunciado</b></h6>
+                    for (int o = 0; o < Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion.Count(); o++)
                     {
                         <div class="form-group" style="font-size:smaller">
+                            @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.IdCuestionario)
+                            @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.Enunciado)
                             <div class="col-sm-10">
                                 <div class="checkbox">
-                                    @Html.RadioButton(Model[i].Cuestionario.Enunciado, Model[i].Cuestionario.OpcionesSeleccion[c].Id) @Html.Label(Model[i].Cuestionario.OpcionesSeleccion[c].Descripcion)
+                                    @Html.RadioButtonFor(model => Model.EncuestaPreguntas[i].Cuestionario.SelectId, Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Id) @Html.Label(Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Descripcion)
                                 </div>
                             </div>
                         </div>
@@ -29,11 +86,14 @@
                     break;
 
                 case "preguntas abiertas":
-                    for (int p = 0; p < Model[i].Cuestionario.OpcionesSeleccion.Count(); p++)
+                    <h6><b> @b.ToString().  @Model.EncuestaPreguntas[i].Cuestionario.Enunciado</b></h6>
+                    for (int p = 0; p < Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion.Count(); p++)
                     {
+                        @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.IdCuestionario)
+                        @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.Enunciado)
                         <div style="font-size:smaller">
                             <p>
-                                @Html.TextBoxFor(m => Model[i].Cuestionario.OpcionesSeleccion[p].Respuesta, new { @class = "form-control" })
+                                @Html.TextBoxFor(m => Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[p].Respuesta, new { @class = "form-control" })
                             </p>
                         </div>
                     }
