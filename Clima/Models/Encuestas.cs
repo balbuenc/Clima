@@ -19,6 +19,7 @@ namespace Clima.Models
         {
             this.AsignacionesEmpresas = new HashSet<AsignacionesEmpresas>();
             this.EncuestaPreguntas = new HashSet<EncuestaPreguntas>();
+            this.Respuestas = new HashSet<Respuestas>();
         }
     
         public short IdPeriodo { get; set; }
@@ -32,5 +33,7 @@ namespace Clima.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EncuestaPreguntas> EncuestaPreguntas { get; set; }
         public virtual Periodos Periodos { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Respuestas> Respuestas { get; set; }
     }
 }

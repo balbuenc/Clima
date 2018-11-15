@@ -29,6 +29,9 @@
         <AssociationConnector Association="climaModel.FK_EncuestaPreguntas_TipoPreguntas" ManuallyRouted="false" />
         <AssociationConnector Association="climaModel.FK_Encuestas_Periodos" ManuallyRouted="false" />
         <AssociationConnector Association="climaModel.FK_OpcionesSeleccionMultiple_SeleccionMultiples" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="climaModel.Respuestas" Width="1.5" PointX="5.25" PointY="14.5" />
+        <AssociationConnector Association="climaModel.FK_Respuestas_Encuestas" />
+        <AssociationConnector Association="climaModel.FK_Respuestas_TipoPreguntas" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

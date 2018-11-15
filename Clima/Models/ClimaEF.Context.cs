@@ -37,5 +37,6 @@ namespace Clima.Models
         public virtual DbSet<Preguntas> Preguntas { get; set; }
         public virtual DbSet<SeleccionMultiples> SeleccionMultiples { get; set; }
         public virtual DbSet<TipoPreguntas> TipoPreguntas { get; set; }
+        public virtual DbSet<Respuestas> Respuestas { get; set; }
     }
 }
