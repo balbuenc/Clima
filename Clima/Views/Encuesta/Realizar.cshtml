@@ -9,17 +9,19 @@
 {
 
     @Html.AntiForgeryToken()
+    @Html.ValidationSummary("", new { @class = "text-danger" })
     <h3>
         @Model.Descripcion
     </h3>
- 
+
     @Html.HiddenFor(model => model.Descripcion)
     @Html.HiddenFor(model => model.IdEncuesta)
     @Html.HiddenFor(model => model.Nombre)
-  
+
     <hr />
-    
+
     <div class="container">
+        @{ bool referencia = false; }
         @for (int i = 0; i < Model.EncuestaPreguntas.Count(); i++)
         {
             int b = i + 1;
@@ -29,6 +31,23 @@
             @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.IdCuestionario)
             @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Id)
 
+            if (!referencia)
+            {
+                <h5>Referencias</h5>
+                for (int o = 0; o < Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion.Count(); o++)
+                {
+                    <div class="row">
+                        @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.IdCuestionario)
+                        <div class="col-12" style="font-size:smaller">
+                            @Html.Label(Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Id.ToString())
+                            -
+                            @Html.Label(Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Descripcion)
+                        </div>
+                    </div>
+                }
+                referencia = true;
+            }
+            <br />
             switch (Model.EncuestaPreguntas[i].TipoPregunta.Tipo.ToLower())
             {
                 case "afirmaciones":
@@ -55,19 +74,6 @@
                             </div>
                         </div>
                     </div>
-                    <h5>Referencias</h5>
-                    for (int o = 0; o < Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion.Count(); o++)
-                    {
-                        <div class="row">
-                            @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.IdCuestionario)
-                            <div class="col-12" style="font-size:smaller">
-                                @Html.Label(Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Id.ToString())
-                                -
-                                @Html.Label(Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Descripcion)
-                            </div>
-                        </div>
-                    }
-
                     break;
                 case "selección multiple":
                     <h6><b> @b.ToString().  @Model.EncuestaPreguntas[i].Cuestionario.Enunciado</b></h6>
@@ -100,6 +106,7 @@
 
                     break;
             }
+            <br />
         }
 
         <div class="form-group">
