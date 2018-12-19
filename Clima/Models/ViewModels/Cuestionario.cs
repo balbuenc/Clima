@@ -16,7 +16,7 @@ namespace Clima.Models.ViewModels
         [Required]
         public string Enunciado { get; set; }
         public int IdDimension { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Debe seleccionar el item")]
         public int SelectId { get; set; }
 
         public List<OpcionSeleccion> OpcionesSeleccion { get; set; }

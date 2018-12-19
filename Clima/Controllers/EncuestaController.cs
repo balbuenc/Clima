@@ -40,7 +40,9 @@ namespace Clima.Controllers
                                          e.IdPeriodo,
                                          tp.IdTipoPregunta,
                                          tp.Tipo,
-                                     }).ToList();
+                                     })
+                                     .OrderBy(e => e.Tipo)
+                                     .ToList();
 
                     if (encuestas.Any())
                     {
@@ -151,7 +153,7 @@ namespace Clima.Controllers
                                 Cuestionario = cuestionario,
                                 
                             };
-
+                            
                             encuesta.EncuestaPreguntas.Add(EncuestaPregunta);
                         }
 
