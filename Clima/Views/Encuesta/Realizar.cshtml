@@ -3,8 +3,6 @@
     ViewBag.Title = "Encuesta";
 }
 
-
-
 @using (Html.BeginForm("Realizar", "Encuesta", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
 
@@ -36,14 +34,18 @@
                 <h5>Referencias</h5>
                 for (int o = 0; o < Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion.Count(); o++)
                 {
-                    <div class="row">
-                        @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.IdCuestionario)
-                        <div class="col-12" style="font-size:smaller">
-                            @Html.Label(Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Id.ToString())
-                            -
-                            @Html.Label(Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Descripcion)
+                    if (Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Id > 0)
+                    {
+                        <div class="row">
+                            @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.IdCuestionario)
+                            <div class="col-12" style="font-size:smaller">
+                                @Html.Label(Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Id.ToString())
+                                -
+                                @Html.Label(Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Descripcion)
+                            </div>
                         </div>
-                    </div>
+                    }
+
                 }
                 referencia = true;
             }
@@ -79,15 +81,33 @@
                     <h6><b> @b.ToString().  @Model.EncuestaPreguntas[i].Cuestionario.Enunciado</b></h6>
                     for (int o = 0; o < Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion.Count(); o++)
                     {
-                        <div class="form-group" style="font-size:smaller">
-                            @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.IdCuestionario)
-                            @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.Enunciado)
+                    <div class="form-group" style="font-size:smaller">
+                        @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.IdCuestionario)
+                        @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.Enunciado)
+                        @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.IsMultiple)
+                        @if (@Model.EncuestaPreguntas[i].Cuestionario.IsMultiple == 1)
+                        {
+                            <div class="col-sm-10">
+                                <div class="checkbox">
+                                    @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Id)
+                                    @Html.CheckBoxFor(model => Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Seleccionado) @Html.Label(Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Descripcion)
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
                             <div class="col-sm-10">
                                 <div class="checkbox">
                                     @Html.RadioButtonFor(model => Model.EncuestaPreguntas[i].Cuestionario.SelectId, Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Id) @Html.Label(Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Descripcion)
                                 </div>
                             </div>
-                        </div>
+                            if (Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Descripcion.ToLower().Equals("otro"))
+                            {
+                                @Html.TextBoxFor(m => Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Respuesta, new { @class = "form-control" })
+                            }
+                        }
+
+                    </div>
                     }
                     break;
 
@@ -100,6 +120,7 @@
                         <div style="font-size:smaller">
                             <p>
                                 @Html.TextBoxFor(m => Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[p].Respuesta, new { @class = "form-control" })
+                                @*@Html.ValidationMessageFor(model => Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[p].Respuesta, "", new { @class = "text-danger" })*@
                             </p>
                         </div>
                     }

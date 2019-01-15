@@ -7,6 +7,7 @@ namespace Clima.Models.ViewModels
 
         public long Id { get; set; }
         public string Descripcion { get; set; }
+        public bool Seleccionado { get; set; }
         [Required(ErrorMessage = "Debe seleccionar el item")]
         public string Respuesta { get; set; }
 
