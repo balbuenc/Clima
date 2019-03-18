@@ -100,7 +100,7 @@ namespace Clima.Controllers
                                         cuestionario.IdCuestionario = selec.IdSeleccionMultiple;
                                         cuestionario.Enunciado = selec.Enunciado;
                                         cuestionario.IdDimension = selec.IdDimension;
-                                        cuestionario.IsMultiple = (int)selec.IsMultiple;
+                                        cuestionario.IsMultiple = (selec.IsMultiple == null) ? 0 : (int)selec.IsMultiple;
 
                                         var opciones = db.OpcionesSeleccionMultiple.Where(o => o.IdSeleccionMultiple == selec.IdSeleccionMultiple).ToList();
 
