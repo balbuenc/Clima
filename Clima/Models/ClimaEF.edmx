@@ -106,6 +106,7 @@
           <Property Name="IdSeleccionMultiple" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Enunciado" Type="varchar" MaxLength="512" Nullable="false" />
           <Property Name="IdDimension" Type="int" Nullable="false" />
+          <Property Name="IsMultiple" Type="smallint" />
         </EntityType>
         <EntityType Name="TipoPreguntas">
           <Key>
@@ -471,6 +472,7 @@
           <NavigationProperty Name="Dimensiones" Relationship="Self.FK_SeleccionMultiples_Dimensiones" FromRole="SeleccionMultiples" ToRole="Dimensiones" />
           <NavigationProperty Name="EncuestaPreguntas" Relationship="Self.FK_EncuestaPreguntas_SeleccionMultiples" FromRole="SeleccionMultiples" ToRole="EncuestaPreguntas" />
           <NavigationProperty Name="OpcionesSeleccionMultiple" Relationship="Self.FK_OpcionesSeleccionMultiple_SeleccionMultiples" FromRole="SeleccionMultiples" ToRole="OpcionesSeleccionMultiple" />
+          <Property Name="IsMultiple" Type="Int16" />
         </EntityType>
         <EntityType Name="TipoPreguntas">
           <Key>
@@ -834,6 +836,7 @@
           <EntitySetMapping Name="SeleccionMultiples">
             <EntityTypeMapping TypeName="climaModel.SeleccionMultiples">
               <MappingFragment StoreEntitySet="SeleccionMultiples">
+                <ScalarProperty Name="IsMultiple" ColumnName="IsMultiple" />
                 <ScalarProperty Name="IdSeleccionMultiple" ColumnName="IdSeleccionMultiple" />
                 <ScalarProperty Name="Enunciado" ColumnName="Enunciado" />
                 <ScalarProperty Name="IdDimension" ColumnName="IdDimension" />
