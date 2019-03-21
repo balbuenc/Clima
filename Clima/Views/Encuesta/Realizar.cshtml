@@ -76,9 +76,9 @@
                     <div class="row">
                         <div class="col-6">
                             <h6><b> @b.ToString().  @Model.EncuestaPreguntas[i].Cuestionario.Enunciado</b></h6>
-                            <button type="button" class="btn btn-link" data-toggle="modal" data-target="#referenciasModal">
-                                Ver Referencias
-                            </button>
+                            @*<button type="button" class="btn btn-link" data-toggle="modal" data-target="#referenciasModal">
+                                    Ver Referencias
+                                </button>*@
                         </div>
                         <div class="col-6">
                             <div class="row">
@@ -91,11 +91,16 @@
                                             <div class="checkbox">
                                                 @num.ToString()
                                                 @Html.RadioButtonFor(model => Model.EncuestaPreguntas[i].Cuestionario.SelectId, Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Id)
-
                                             </div>
                                         </div>
                                     </div>
+
                                 }
+                                <div class="col-2">
+                                    <button type="button" id="btnReferencias" class="open btn btn-outline-secondary" data-toggle="modal" data-target="#referenciasModal">
+                                        <i class="fas fa-bookmark"></i>
+                                    </button>
+                                </div>
                                 @Html.ValidationMessageFor(model => model.EncuestaPreguntas[i].Cuestionario.SelectId, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -150,7 +155,7 @@
                             </p>
                         </div>
                     }
-                    
+
                     break;
             }
             <br />
@@ -169,16 +174,15 @@
 }
 
 
-
-
 @section Scripts {
 
     @Scripts.Render("~/bundles/jqueryval")
 
-    <script>
-        $("#btnToast").click(function () {
-            $('#myModal').modal('show')
+    @*<script>
+        $(document).ready(function () {
+            $(".open").hover(function () {
+                $('.modal').modal('show');
+            });
         });
-
-    </script>
+    </script>*@
 }
