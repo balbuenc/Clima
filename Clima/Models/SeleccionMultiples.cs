@@ -24,6 +24,7 @@ namespace Clima.Models
         public int IdSeleccionMultiple { get; set; }
         public string Enunciado { get; set; }
         public int IdDimension { get; set; }
+        public Nullable<short> IsMultiple { get; set; }
     
         public virtual Dimensiones Dimensiones { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

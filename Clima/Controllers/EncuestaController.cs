@@ -1,5 +1,6 @@
 ﻿using Clima.Models;
 using Clima.Models.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -15,7 +16,7 @@ namespace Clima.Controllers
             {
                 id = 1;
             }
-          
+
             if (id != null)
             {
                 using (climaEntities db = new climaEntities())
@@ -58,7 +59,7 @@ namespace Clima.Controllers
                         foreach (var e in encuestas)
                         {
                             Cuestionario cuestionario = new Cuestionario();
-                            
+
                             switch (e.Tipo.ToLower())
                             {
                                 case "afirmaciones":
@@ -96,23 +97,23 @@ namespace Clima.Controllers
 
                                     if (selec != null)
                                     {
-                                        if (selec != null)
-                                        {
-                                            cuestionario.IdCuestionario = selec.IdSeleccionMultiple;
-                                            cuestionario.Enunciado = selec.Enunciado;
-                                            cuestionario.IdDimension = selec.IdDimension;
-                                            var opciones = db.OpcionesSeleccionMultiple.Where(o => o.IdSeleccionMultiple == selec.IdSeleccionMultiple).ToList();
+                                        cuestionario.IdCuestionario = selec.IdSeleccionMultiple;
+                                        cuestionario.Enunciado = selec.Enunciado;
+                                        cuestionario.IdDimension = selec.IdDimension;
+                                        cuestionario.IsMultiple = (selec.IsMultiple == null) ? 0 : (int)selec.IsMultiple;
 
-                                            if (opciones.Any())
+                                        var opciones = db.OpcionesSeleccionMultiple.Where(o => o.IdSeleccionMultiple == selec.IdSeleccionMultiple).ToList();
+
+                                        if (opciones.Any())
+                                        {
+                                            foreach (var item in opciones)
                                             {
-                                                foreach (var item in opciones)
+                                                cuestionario.OpcionesSeleccion.Add(new OpcionSeleccion
                                                 {
-                                                    cuestionario.OpcionesSeleccion.Add(new OpcionSeleccion
-                                                    {
-                                                        Id = item.IdSeleccionMultiple,
-                                                        Descripcion = item.Valor
-                                                    });
-                                                }
+                                                    Id = item.Id,
+                                                    Descripcion = item.Valor,
+                                                    Seleccionado = false
+                                                });
                                             }
                                         }
                                     }
@@ -148,22 +149,16 @@ namespace Clima.Controllers
                             var EncuestaPregunta = new EncuestaPregunta
                             {
                                 Id = e.Id,
-                                //Encuesta = encuesta,
                                 TipoPregunta = TipoPregunta,
                                 Cuestionario = cuestionario,
-                                
                             };
-                            
                             encuesta.EncuestaPreguntas.Add(EncuestaPregunta);
                         }
-
                     }
-                   
-                    return View(encuesta);
 
+                    return View(encuesta);
                 }
             }
-
             return View();
         }
 
@@ -171,40 +166,54 @@ namespace Clima.Controllers
         [HttpPost]
         public ActionResult Realizar(Encuesta model)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    ModelState.AddModelError("", "Error con los datos");
-            //    return View(model);
-            //}
-
-            using (climaEntities db = new climaEntities())
+            try
             {
-                var user = System.Web.HttpContext.Current.User.Identity.Name;
-
-                foreach (var resultado in model.EncuestaPreguntas)
+                using (climaEntities db = new climaEntities())
                 {
-                    Respuestas respuesta = new Respuestas();
+                    var user = System.Web.HttpContext.Current.User.Identity.Name;
 
-                    respuesta.IdEncuesta = model.IdEncuesta;
-                    respuesta.IdTipoPregunta = resultado.TipoPregunta.IdTipoPregunta;
-                    respuesta.login = user;
-                    respuesta.IdConsulta = resultado.Cuestionario.IdCuestionario;
-                    if (resultado.Cuestionario.OpcionesSeleccion.Any())
+                    foreach (var resultado in model.EncuestaPreguntas)
                     {
-                        respuesta.Respuesta = resultado.Cuestionario.OpcionesSeleccion.First().Respuesta;
-                    }
-                    else
-                    {
-                        respuesta.Respuesta = resultado.Cuestionario.SelectId.ToString();
-                    }
+                        Respuestas respuesta = new Respuestas();
 
-                    db.Respuestas.Add(respuesta);
-                    db.SaveChanges();
+                        respuesta.IdEncuesta = model.IdEncuesta;
+                        respuesta.IdTipoPregunta = resultado.TipoPregunta.IdTipoPregunta;
+                        respuesta.login = user;
+                        respuesta.IdConsulta = resultado.Cuestionario.IdCuestionario;
+                        if (resultado.Cuestionario.OpcionesSeleccion.Any() && resultado.Cuestionario.IsMultiple == 0)
+                        {
+                            respuesta.Respuesta = resultado.Cuestionario.OpcionesSeleccion.First().Respuesta;
+                            db.Respuestas.Add(respuesta);
+                            db.SaveChanges();
+                        }
+                        else
+                        {
+                            if (resultado.Cuestionario.IsMultiple == 1)
+                            {
+                                foreach (var r in resultado.Cuestionario.OpcionesSeleccion)
+                                {
+                                    if (r.Seleccionado)
+                                    {
+                                        respuesta.Respuesta = r.Id.ToString();
+                                        db.Respuestas.Add(respuesta);
+                                        db.SaveChanges();
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                respuesta.Respuesta = resultado.Cuestionario.SelectId.ToString();
+                                db.Respuestas.Add(respuesta);
+                                db.SaveChanges();
+                            }
+                        }
+                    }
                 }
             }
-
-            //ViewData["resultado"] = "Realizado";
-
+            catch (Exception ex)
+            {
+                throw;
+            }
             return RedirectToAction("Index", "Home");
         }
     }
