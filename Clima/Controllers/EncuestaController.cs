@@ -19,145 +19,156 @@ namespace Clima.Controllers
 
             if (id != null)
             {
+                var user = System.Web.HttpContext.Current.User.Identity.Name;
+
                 using (climaEntities db = new climaEntities())
                 {
-                    //IList<EncuestaPregunta> encuestaPreguntas = new List<EncuestaPregunta>();
-                    var encuesta = new Encuesta();
+                    var encuestaCerrada = db.Respuestas.Where(r => r.IdEncuesta == id && r.login.Equals(user)).Count();
 
-                    var encuestas = (from ep in db.EncuestaPreguntas
-                                     join e in db.Encuestas on ep.IdEncuesta equals e.IdEncuesta
-                                     join tp in db.TipoPreguntas on ep.IdTipoPregunta equals tp.IdTipoPregunta
-                                     where ep.IdEncuesta == id
-                                     select new
-                                     {
-                                         ep.Id,
-                                         ep.IdEncuesta,
-                                         ep.IdAfirmacion,
-                                         ep.IdSeleccionMultiple,
-                                         ep.IdPregunta,
-                                         e.Nombre,
-                                         e.Descripcion,
-                                         e.Activo,
-                                         e.IdPeriodo,
-                                         tp.IdTipoPregunta,
-                                         tp.Tipo,
-                                     })
-                                     .OrderBy(e => e.Tipo)
-                                     .ToList();
-
-                    if (encuestas.Any())
+                    if (encuestaCerrada == 0)
                     {
-                        var enc = encuestas.First();
+                        var encuesta = new Encuesta();
 
-                        // cargamos la encuesta
-                        encuesta.IdEncuesta = enc.IdEncuesta;
-                        encuesta.Descripcion = enc.Descripcion;
-                        encuesta.Activo = enc.Activo;
-                        encuesta.Nombre = enc.Nombre;
-                        encuesta.IdPeriodo = enc.IdPeriodo;
+                        var encuestas = (from ep in db.EncuestaPreguntas
+                                         join e in db.Encuestas on ep.IdEncuesta equals e.IdEncuesta
+                                         join tp in db.TipoPreguntas on ep.IdTipoPregunta equals tp.IdTipoPregunta
+                                         where ep.IdEncuesta == id
+                                         select new
+                                         {
+                                             ep.Id,
+                                             ep.IdEncuesta,
+                                             ep.IdAfirmacion,
+                                             ep.IdSeleccionMultiple,
+                                             ep.IdPregunta,
+                                             e.Nombre,
+                                             e.Descripcion,
+                                             e.Activo,
+                                             e.IdPeriodo,
+                                             tp.IdTipoPregunta,
+                                             tp.Tipo,
+                                         })
+                                         //.OrderBy(e => e.Tipo)
+                                         .ToList();
 
-                        foreach (var e in encuestas)
+                        if (encuestas.Any())
                         {
-                            Cuestionario cuestionario = new Cuestionario();
+                            var enc = encuestas.First();
 
-                            switch (e.Tipo.ToLower())
+                            // cargamos la encuesta
+                            encuesta.IdEncuesta = enc.IdEncuesta;
+                            encuesta.Descripcion = enc.Descripcion;
+                            encuesta.Activo = enc.Activo;
+                            encuesta.Nombre = enc.Nombre;
+                            encuesta.IdPeriodo = enc.IdPeriodo;
+
+                            foreach (var e in encuestas)
                             {
-                                case "afirmaciones":
-                                    var afir = (from a in db.Afirmaciones
-                                                join ep in db.EncuestaPreguntas on a.IdAfirmacion equals ep.IdAfirmacion
-                                                where ep.IdAfirmacion == e.IdAfirmacion
-                                                select a).FirstOrDefault();
+                                Cuestionario cuestionario = new Cuestionario();
 
-                                    var eval = db.EvaluacionAfirmaciones.ToList();
+                                switch (e.Tipo.ToLower())
+                                {
+                                    case "afirmaciones":
+                                        var afir = (from a in db.Afirmaciones
+                                                    join ep in db.EncuestaPreguntas on a.IdAfirmacion equals ep.IdAfirmacion
+                                                    where ep.IdAfirmacion == e.IdAfirmacion
+                                                    select a).FirstOrDefault();
 
-                                    if (afir != null)
-                                    {
-                                        cuestionario.IdCuestionario = afir.IdAfirmacion;
-                                        cuestionario.Enunciado = afir.Enunciado;
-                                        cuestionario.IdDimension = afir.IdDimension;
-                                        if (eval.Any())
+                                        var eval = db.EvaluacionAfirmaciones.ToList();
+
+                                        if (afir != null)
                                         {
-                                            foreach (var item in eval)
+                                            cuestionario.IdCuestionario = afir.IdAfirmacion;
+                                            cuestionario.Enunciado = afir.Enunciado;
+                                            cuestionario.IdDimension = afir.IdDimension;
+                                            if (eval.Any())
                                             {
-                                                cuestionario.OpcionesSeleccion.Add(new OpcionSeleccion
+                                                foreach (var item in eval)
                                                 {
-                                                    Id = item.Evaluacion,
-                                                    Descripcion = item.Descripcion
-                                                });
+                                                    cuestionario.OpcionesSeleccion.Add(new OpcionSeleccion
+                                                    {
+                                                        Id = item.Evaluacion,
+                                                        Descripcion = item.Descripcion
+                                                    });
+                                                }
                                             }
                                         }
-                                    }
 
-                                    break;
-                                case "selección multiple":
-                                    var selec = (from s in db.SeleccionMultiples
-                                                 join ep in db.EncuestaPreguntas on s.IdSeleccionMultiple equals ep.IdSeleccionMultiple
-                                                 where ep.IdSeleccionMultiple == e.IdSeleccionMultiple
-                                                 select s).FirstOrDefault();
+                                        break;
+                                    case "selección multiple":
+                                        var selec = (from s in db.SeleccionMultiples
+                                                     join ep in db.EncuestaPreguntas on s.IdSeleccionMultiple equals ep.IdSeleccionMultiple
+                                                     where ep.IdSeleccionMultiple == e.IdSeleccionMultiple
+                                                     select s).FirstOrDefault();
 
-                                    if (selec != null)
-                                    {
-                                        cuestionario.IdCuestionario = selec.IdSeleccionMultiple;
-                                        cuestionario.Enunciado = selec.Enunciado;
-                                        cuestionario.IdDimension = selec.IdDimension;
-                                        cuestionario.IsMultiple = (selec.IsMultiple == null) ? 0 : (int)selec.IsMultiple;
-
-                                        var opciones = db.OpcionesSeleccionMultiple.Where(o => o.IdSeleccionMultiple == selec.IdSeleccionMultiple).ToList();
-
-                                        if (opciones.Any())
+                                        if (selec != null)
                                         {
-                                            foreach (var item in opciones)
+                                            cuestionario.IdCuestionario = selec.IdSeleccionMultiple;
+                                            cuestionario.Enunciado = selec.Enunciado;
+                                            cuestionario.IdDimension = selec.IdDimension;
+                                            cuestionario.IsMultiple = (selec.IsMultiple == null) ? 0 : (int)selec.IsMultiple;
+
+                                            var opciones = db.OpcionesSeleccionMultiple.Where(o => o.IdSeleccionMultiple == selec.IdSeleccionMultiple).ToList();
+
+                                            if (opciones.Any())
                                             {
-                                                cuestionario.OpcionesSeleccion.Add(new OpcionSeleccion
+                                                foreach (var item in opciones)
                                                 {
-                                                    Id = item.Id,
-                                                    Descripcion = item.Valor,
-                                                    Seleccionado = false
-                                                });
+                                                    cuestionario.OpcionesSeleccion.Add(new OpcionSeleccion
+                                                    {
+                                                        Id = item.Id,
+                                                        Descripcion = item.Valor,
+                                                        Seleccionado = false
+                                                    });
+                                                }
                                             }
                                         }
-                                    }
 
-                                    break;
-                                case "preguntas abiertas":
-                                    var preg = (from p in db.Preguntas
-                                                join ep in db.EncuestaPreguntas on p.IdPregunta equals ep.IdPregunta
-                                                where p.IdPregunta == e.IdPregunta
-                                                select p).FirstOrDefault();
+                                        break;
+                                    case "preguntas abiertas":
+                                        var preg = (from p in db.Preguntas
+                                                    join ep in db.EncuestaPreguntas on p.IdPregunta equals ep.IdPregunta
+                                                    where p.IdPregunta == e.IdPregunta
+                                                    select p).FirstOrDefault();
 
-                                    if (preg != null)
-                                    {
-                                        cuestionario.IdCuestionario = preg.IdPregunta;
-                                        cuestionario.Enunciado = preg.Enunciado;
-                                        cuestionario.IdDimension = preg.IdDimension;
-                                        cuestionario.OpcionesSeleccion.Add(new OpcionSeleccion
+                                        if (preg != null)
                                         {
-                                            Id = 0,
-                                            Descripcion = "sin valor"
-                                        });
-                                    }
-                                    break;
+                                            cuestionario.IdCuestionario = preg.IdPregunta;
+                                            cuestionario.Enunciado = preg.Enunciado;
+                                            cuestionario.IdDimension = preg.IdDimension;
+                                            cuestionario.OpcionesSeleccion.Add(new OpcionSeleccion
+                                            {
+                                                Id = 0,
+                                                Descripcion = "sin valor"
+                                            });
+                                        }
+                                        break;
+                                }
+
+                                // cargamos los tipo de preguntas y sus cuestionarios
+                                var TipoPregunta = new TipoPregunta
+                                {
+                                    IdTipoPregunta = e.IdTipoPregunta,
+                                    Tipo = e.Tipo
+                                };
+
+                                var EncuestaPregunta = new EncuestaPregunta
+                                {
+                                    Id = e.Id,
+                                    TipoPregunta = TipoPregunta,
+                                    Cuestionario = cuestionario,
+                                };
+                                encuesta.EncuestaPreguntas.Add(EncuestaPregunta);
                             }
-
-                            // cargamos los tipo de preguntas y sus cuestionarios
-                            var TipoPregunta = new TipoPregunta
-                            {
-                                IdTipoPregunta = e.IdTipoPregunta,
-                                Tipo = e.Tipo
-                            };
-
-                            var EncuestaPregunta = new EncuestaPregunta
-                            {
-                                Id = e.Id,
-                                TipoPregunta = TipoPregunta,
-                                Cuestionario = cuestionario,
-                            };
-                            encuesta.EncuestaPreguntas.Add(EncuestaPregunta);
                         }
+                        ViewData["cerrado"] = false;
+                        return View(encuesta);
                     }
-
-                    return View(encuesta);
+                    else
+                    {
+                        ViewData["cerrado"] = true;
+                    }
                 }
+
             }
             return View();
         }
