@@ -1,6 +1,6 @@
 ﻿@model Clima.Models.ViewModels.Encuesta
 @{
-    ViewBag.Title = "Encuesta de Clima 2019" ;
+    ViewBag.Title = "Encuestade Clima 2019";
 }
 
 @using (Html.BeginForm("Realizar", "Encuesta", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -8,177 +8,188 @@
 
     @Html.AntiForgeryToken()
     @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
-    <h3>
-        @Model.Descripcion
-    </h3>
+    if ((bool)ViewData["cerrado"] == true)
+    {
+        <div class="alert alert-primary" role="alert">
+            Esta encuesta ha finalizado
+        </div>
+    }
+    else
+    {
+        <h3>
+            @Model.Descripcion
+        </h3>
 
-    @Html.HiddenFor(model => model.Descripcion)
-    @Html.HiddenFor(model => model.IdEncuesta)
-    @Html.HiddenFor(model => model.Nombre)
+        @Html.HiddenFor(model => model.Descripcion)
+        @Html.HiddenFor(model => model.IdEncuesta)
+        @Html.HiddenFor(model => model.Nombre)
 
-    <hr />
+        <hr />
 
-    <div class="container">
+        <div class="container">
 
-
-        @{ bool referencia = false; }
-        @for (int i = 0; i < Model.EncuestaPreguntas.Count(); i++)
-        {
-            int b = i + 1;
-
-            @Html.HiddenFor(model => Model.EncuestaPreguntas[i].TipoPregunta.Tipo)
-            @Html.HiddenFor(model => Model.EncuestaPreguntas[i].TipoPregunta.IdTipoPregunta)
-            @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.IdCuestionario)
-            @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Id)
-
-            if (!referencia)
+            @{ bool referencia = false; }
+            @for (int i = 0; i < Model.EncuestaPreguntas.Count(); i++)
             {
-                <div class="modal fade" id="referenciasModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLongTitle">Referencias</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                @for (int o = 0; o < Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion.Count(); o++)
-                                {
-                                    if (Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Id > 0)
-                                    {
-                                        <div class="row">
-                                            @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.IdCuestionario)
-                                            <div class="col-12" style="font-size:smaller">
-                                                @Html.Label(Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Id.ToString())
-                                                -
-                                                @Html.Label(Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Descripcion)
-                                            </div>
-                                        </div>
-                                    }
+                int b = i + 1;
 
-                                }
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                @Html.HiddenFor(model => Model.EncuestaPreguntas[i].TipoPregunta.Tipo)
+                @Html.HiddenFor(model => Model.EncuestaPreguntas[i].TipoPregunta.IdTipoPregunta)
+                @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.IdCuestionario)
+                @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Id)
+
+                if (!referencia)
+                {
+                    <div class="modal fade" id="referenciasModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Referencias</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    @for (int o = 0; o < Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion.Count(); o++)
+                                    {
+                                        if (Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Id > 0)
+                                        {
+                                            <div class="row">
+                                                @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.IdCuestionario)
+                                                <div class="col-12" style="font-size:smaller">
+                                                    @Html.Label(Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Id.ToString())
+                                                    -
+                                                    @Html.Label(Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Descripcion)
+                                                </div>
+                                            </div>
+                                        }
+
+                                    }
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                referencia = true;
-            }
-            <br />
+                    referencia = true;
+                }
+                <br />
 
-            switch (Model.EncuestaPreguntas[i].TipoPregunta.Tipo.ToLower())
-            {
-                case "afirmaciones":
-                    <div class="row">
-                        <div class="col-6">
-                            <h6><b> @b.ToString().  @Model.EncuestaPreguntas[i].Cuestionario.Enunciado</b></h6>
-                            <button type="button" class="btn btn-link" data-toggle="modal" data-target="#referenciasModal">
-                                Ver Referencias
-                            </button>
-                        </div>
-                        <div class="col-6">
-                            <div class="row">
-                                @for (int o = 0; o < Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion.Count(); o++)
-                                {
-                                    int num = @o + 1;
+                switch (Model.EncuestaPreguntas[i].TipoPregunta.Tipo.ToLower())
+                {
+                    case "afirmaciones":
+                        <div class="row">
+                            <div class="col-6">
+                                <h6><b> @b.ToString().  @Model.EncuestaPreguntas[i].Cuestionario.Enunciado</b></h6>
+                                @*<button type="button" class="btn btn-link" data-toggle="modal" data-target="#referenciasModal">
+                                        Ver Referencias
+                                    </button>*@
+                            </div>
+                            <div class="col-6">
+                                <div class="row">
+                                    @for (int o = 0; o < Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion.Count(); o++)
+                                    {
+                                        int num = @o + 1;
 
-                                    <div class="form-group" style="font-size:smaller">
-                                        <div class="col-2">
-                                            <div class="checkbox">
-                                                @num.ToString()
-                                                @Html.RadioButtonFor(model => Model.EncuestaPreguntas[i].Cuestionario.SelectId, Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Id)
-
+                                        <div class="form-group" style="font-size:smaller">
+                                            <div class="col-2">
+                                                <div class="checkbox">
+                                                    @num.ToString()
+                                                    @Html.RadioButtonFor(model => Model.EncuestaPreguntas[i].Cuestionario.SelectId, Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Id)
+                                                </div>
                                             </div>
+                                        </div>
+
+                                    }
+                                    <div class="col-2">
+                                        <button type="button" id="btnReferencias" class="open btn btn-outline-secondary" data-toggle="modal" data-target="#referenciasModal">
+                                            <i class="fas fa-bookmark"></i>
+                                        </button>
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.EncuestaPreguntas[i].Cuestionario.SelectId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        break;
+                    case "selección multiple":
+                        <h6><b> @b.ToString().  @Model.EncuestaPreguntas[i].Cuestionario.Enunciado</b></h6>
+                        for (int o = 0; o < Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion.Count(); o++)
+                        {
+                            <div class="form-group" style="font-size:smaller">
+                                @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.IdCuestionario)
+                                @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.Enunciado)
+                                @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.IsMultiple)
+                                @if (@Model.EncuestaPreguntas[i].Cuestionario.IsMultiple == 1)
+                                {
+                                    <div class="col-sm-10">
+                                        <div class="checkbox">
+                                            @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Id)
+                                            @Html.CheckBoxFor(model => Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Seleccionado) @Html.Label(Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Descripcion)
                                         </div>
                                     </div>
                                 }
-                                @Html.ValidationMessageFor(model => model.EncuestaPreguntas[i].Cuestionario.SelectId, "", new { @class = "text-danger" })
+                                else
+                                {
+                                    <div class="col-sm-10">
+                                        <div class="checkbox">
+                                            @Html.RadioButtonFor(model => Model.EncuestaPreguntas[i].Cuestionario.SelectId, Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Id) @Html.Label(Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Descripcion)
+                                        </div>
+                                    </div>
+                                    if (Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Descripcion.ToLower().Equals("otro"))
+                                    {
+                                        @Html.TextBoxFor(m => Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Respuesta, new { @class = "form-control" })
+                                    }
+                                }
+
                             </div>
-                        </div>
-                    </div>
-                    break;
-                case "selección multiple":
-                    <h6><b> @b.ToString().  @Model.EncuestaPreguntas[i].Cuestionario.Enunciado</b></h6>
-                    for (int o = 0; o < Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion.Count(); o++)
-                    {
-                        <div class="form-group" style="font-size:smaller">
+                        }
+                        @Html.ValidationMessageFor(model => model.EncuestaPreguntas[i].Cuestionario.SelectId, "", new { @class = "text-danger" })
+                        break;
+
+                    case "preguntas abiertas":
+                        <h6><b> @b.ToString().  @Model.EncuestaPreguntas[i].Cuestionario.Enunciado</b></h6>
+                        for (int p = 0; p < Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion.Count(); p++)
+                        {
                             @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.IdCuestionario)
                             @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.Enunciado)
-                            @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.IsMultiple)
-                            @if (@Model.EncuestaPreguntas[i].Cuestionario.IsMultiple == 1)
-                            {
-                                <div class="col-sm-10">
-                                    <div class="checkbox">
-                                        @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Id)
-                                        @Html.CheckBoxFor(model => Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Seleccionado) @Html.Label(Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Descripcion)
-                                    </div>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="col-sm-10">
-                                    <div class="checkbox">
-                                        @Html.RadioButtonFor(model => Model.EncuestaPreguntas[i].Cuestionario.SelectId, Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Id) @Html.Label(Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Descripcion)
-                                    </div>
-                                </div>
-                                if (Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Descripcion.ToLower().Equals("otro"))
-                                {
-                                    @Html.TextBoxFor(m => Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[o].Respuesta, new { @class = "form-control" })
-                                }
-                            }
+                            <div style="font-size:smaller">
+                                <p>
+                                    @Html.TextBoxFor(m => Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[p].Respuesta, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[p].Respuesta, "", new { @class = "text-danger" })
 
-                        </div>
-                    }
-                    @Html.ValidationMessageFor(model => model.EncuestaPreguntas[i].Cuestionario.SelectId, "", new { @class = "text-danger" })
-                    break;
+                                </p>
+                            </div>
+                        }
 
-                case "preguntas abiertas":
-                    <h6><b> @b.ToString().  @Model.EncuestaPreguntas[i].Cuestionario.Enunciado</b></h6>
-                    for (int p = 0; p < Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion.Count(); p++)
-                    {
-                        @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.IdCuestionario)
-                        @Html.HiddenFor(model => Model.EncuestaPreguntas[i].Cuestionario.Enunciado)
-                        <div style="font-size:smaller">
-                            <p>
-                                @Html.TextBoxFor(m => Model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[p].Respuesta, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.EncuestaPreguntas[i].Cuestionario.OpcionesSeleccion[p].Respuesta, "", new { @class = "text-danger" })
-
-                            </p>
-                        </div>
-                    }
-                    
-                    break;
+                        break;
+                }
+                <br />
             }
-            <br />
-        }
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" class="btn btn-lg btn-primary" value="Registrar" />
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-lg btn-primary" value="Registrar" />
+                </div>
+
             </div>
 
         </div>
 
-    </div>
-
+    }
 
 }
-
-
-
 
 @section Scripts {
 
     @Scripts.Render("~/bundles/jqueryval")
 
-    <script>
-        $("#btnToast").click(function () {
-            $('#myModal').modal('show')
-        });
-
-    </script>
+    @*<script>
+            $(document).ready(function () {
+                $(".open").hover(function () {
+                    $('.modal').modal('show');
+                });
+            });
+        </script>*@
 }
