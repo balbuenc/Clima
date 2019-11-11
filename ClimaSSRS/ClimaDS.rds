@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="ClimaDS">
+  <ConnectionProperties>
+    <Extension>SQL</Extension>
+    <ConnectString>Data Source=iasdbus01,1500;Initial Catalog=Clima</ConnectString>
+    <Prompt>Specify a user name and password for data source ClimaDS:</Prompt>
+  </ConnectionProperties>
+  <DataSourceID>a6547aef-0ff8-41f6-9e59-9433633a09a8</DataSourceID>
+</RptDataSource>
